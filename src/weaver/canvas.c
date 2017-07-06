@@ -82,12 +82,12 @@ old_height= W.height;
 W.width= width;
 W.height= height;
 glViewport(0,0,W.width,W.height);
-/*432:*/
-#line 9456 "cweb/weaver.w"
+/*433:*/
+#line 9464 "cweb/weaver.w"
 
 _update_interface_screen_size();
-/*:432*//*474:*/
-#line 10509 "cweb/weaver.w"
+/*:433*//*475:*/
+#line 10517 "cweb/weaver.w"
 
 {
 
@@ -115,7 +115,7 @@ else new_height= _interfaces[i][j].height;
 W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
-/*:474*/
+/*:475*/
 #line 5708 "cweb/weaver.w"
 
 #ifdef W_MULTITHREAD

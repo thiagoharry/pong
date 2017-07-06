@@ -1,5 +1,5 @@
-/*436:*/
-#line 9517 "cweb/weaver.w"
+/*437:*/
+#line 9525 "cweb/weaver.w"
 
 #include <sys/types.h>  
 #include <sys/stat.h>  
@@ -9,8 +9,8 @@
 #include <unistd.h>  
 #include <fcntl.h>  
 #include "shaders.h"
-/*444:*/
-#line 9618 "cweb/weaver.w"
+/*445:*/
+#line 9626 "cweb/weaver.w"
 
 char _vertex_interface[]= {
 #include "vertex_interface.data"
@@ -18,8 +18,8 @@ char _vertex_interface[]= {
 char _fragment_interface[]= {
 #include "fragment_interface.data"
 ,0x00};
-/*:444*//*446:*/
-#line 9636 "cweb/weaver.w"
+/*:445*//*447:*/
+#line 9644 "cweb/weaver.w"
 
 GLuint _compile_shader(char*source,bool vertex){
 GLuint shader;
@@ -55,8 +55,8 @@ exit(1);
 }
 return shader;
 }
-/*:446*//*448:*/
-#line 9681 "cweb/weaver.w"
+/*:447*//*449:*/
+#line 9689 "cweb/weaver.w"
 
 GLuint _link_and_clean_shaders(GLuint vertex,GLuint fragment){
 GLuint program= glCreateProgram();
@@ -90,8 +90,8 @@ glDetachShader(program,vertex);
 glDetachShader(program,fragment);
 return program;
 }
-/*:448*//*458:*/
-#line 10010 "cweb/weaver.w"
+/*:449*//*459:*/
+#line 10018 "cweb/weaver.w"
 
 void _compile_and_insert_new_shader(char*dir,int position){
 char*vertex_file= NULL,*fragment_file= NULL;
@@ -310,8 +310,8 @@ glGetAttribLocation(_shader_list[position].program_shader,
 if(fragment_source!=NULL)Wfree(fragment_source);
 if(vertex_source!=NULL)Wfree(vertex_source);
 }
-/*:458*//*487:*/
-#line 10758 "cweb/weaver.w"
+/*:459*//*488:*/
+#line 10766 "cweb/weaver.w"
 
 char _vertex_interface_texture[]= {
 #include "vertex_interface_texture.data"
@@ -319,8 +319,8 @@ char _vertex_interface_texture[]= {
 char _fragment_interface_texture[]= {
 #include "fragment_interface_texture.data"
 ,0x00};
-/*:487*//*493:*/
-#line 10934 "cweb/weaver.w"
+/*:488*//*494:*/
+#line 10942 "cweb/weaver.w"
 
 void _change_resolution(int resolution_x,int resolution_y){
 int width,height,old_width= W.width,old_height= W.height;
@@ -379,14 +379,14 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 }
-/*:493*//*498:*/
-#line 11022 "cweb/weaver.w"
+/*:494*//*499:*/
+#line 11030 "cweb/weaver.w"
 
 void _change_final_shader(int type){
 _use_non_default_render= true;
 _custom_final_shader= type;
 }
-/*:498*/
-#line 9526 "cweb/weaver.w"
+/*:499*/
+#line 9534 "cweb/weaver.w"
 
-/*:436*/
+/*:437*/

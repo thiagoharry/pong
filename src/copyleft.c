@@ -34,7 +34,8 @@ static int state;
 static struct sound *hit;
 static GLint rotation_loc, render_mode_loc, alpha_loc;
 static GLuint VAOs, EBO, buffers;
-static GLuint vertex_shader, fragment_shader, program, textures;
+static GLuint vertex_shader, fragment_shader, program, textures,
+  second_texture;
 
 void copyleft(void){
   // The copyright symbol has 1045 vertices. No low poly here. 
@@ -403,10 +404,17 @@ void copyleft(void){
                       0.0158, 0.3030, -0.034, 1.0, 0.0, 0.0, 1.0, 1.0, -0.0260,
                       0.3058, -0.034, 1.0, 0.0, 0.0, 1.0, 1.0, 0.1470, -0.0997,
                       -0.034, 1.0, 0.0, 0.0, 1.0, 1.0,
+                      // Copyleft image:
                       -0.4, -0.4, 0.034, 1.0, 1.0, 0.0, 1.0, 1.0,
                       0.4, -0.4, 0.034, 1.0, 0.0, 0.0, 1.0, 1.0,
                       -0.4, -0.6, 0.034, 1.0, 1.0, 1.0, 1.0, 1.0,
-                      0.4, -0.6, 0.034, 1.0, 0.0, 1.0, 1.0, 1.0};
+                      0.4, -0.6, 0.034, 1.0, 0.0, 1.0, 1.0, 1.0,
+                      // License image:
+                      -0.5, 0.5, 0.034, 1.0, 1.0, 0.0, 1.0, 1.0,
+                      0.5, 0.5, 0.034, 1.0, 0.0, 0.0, 1.0, 1.0,
+                      -0.5, -0.5, 0.034, 1.0, 1.0, 1.0, 1.0, 1.0,
+                      0.5, -0.5, 0.034, 1.0, 0.0, 1.0, 1.0, 1.0,
+  };
   // How the vertices form the copyright edges:
   int indices[] = {96, 95, 0, 94, 1, 93, 2, 92, 3, 91, 4, 90, 5, 89, 6, 88, 7,
                    87, 8, 86, 9, 85, 10, 84, 11, 83, 12, 82, 13, 81, 14, 80, 15,
@@ -472,8 +480,9 @@ void copyleft(void){
                    114, 307, 113, 306, 112, 305, 111, 304, 110, 303, 109, 302,
                    108, 301, 107, 300, 106, 299, 105, 298, 104, 297, 103, 296,
                    102, 295, 101, 294, 100, 293, 99, 292, 0xffff, 388, 389,
-                   390, 391};
+                   390, 391, /**/ 392, 393, 394, 395};
 #include "copyleft_image.c"
+#include "license_image.c"
   char vertex_source[] ="#version 100\n\nprecision highp float;\nprecision highp int;\nprecision lowp sampler2D;\nprecision lowp samplerCube;\n\nuniform vec3 rotation;\nuniform vec3 scaling;\nuniform vec3 scaling2;\nuniform vec3 translating;\nuniform int render_mode;\n\nattribute vec4 vPosition;\nattribute vec4 vColor;\nattribute vec2 vTexCoord;\n\nvarying vec4 color;\nvarying vec2 tex_coord;\nvarying vec3 normal;\nvarying float fragment_render_mode;\n\nvoid main(){\nmat4 rotation_x = mat4(1.0, 0.0,             0.0,              0.0,\n0.0, cos(rotation.x), -sin(rotation.x), 0.0,\n0.0, sin(rotation.x), cos(rotation.x),  0.0,\n0.0, 0.0,             0.0,              1.0);\nmat4 rotation_y = mat4(cos(rotation.y), 0.0, -sin(rotation.y), 0.0,\n0.0,             1.0, 0.0,              0.0,\nsin(rotation.y), 0.0, cos(rotation.y),  0.0,0.0,             0.0, 0.0,              1.0);\nmat4 scaling = mat4(scaling.x, 0.0,       0.0,       0.0,\n0.0,       scaling.y, 0.0,       0.0,\n0.0,       0.0,       scaling.z, 0.0,\n0.0,       0.0,       0.0,       1.0);\nmat4 scaling2 = mat4(scaling2.x, 0.0,       0.0,       0.0,\n0.0,       scaling2.y, 0.0,       0.0,\n0.0,       0.0,       scaling2.z, 0.0,\n0.0,       0.0,       0.0,       1.0);\nmat4 translate = mat4(1.0, 0.0, 0.0, translating.x,\n0.0, 1.0, 0.0, translating.y,\n0.0, 0.0, 1.0, translating.z,\n0.0, 0.0, 0.0, 1.0);\ngl_Position =  vPosition * translate * rotation_x * rotation_y * scaling * scaling2;\nif(render_mode == 1){\ncolor = vColor;\n}\nelse if(render_mode == 2 || render_mode == 3 || render_mode == 5 || render_mode == 6){\ntex_coord = vTexCoord;\n}\nfragment_render_mode = float(render_mode);\nnormal = normalize(gl_Position.xyz);\n}";
   char fragment_source[] = "#version 100\n\nprecision highp float;\nprecision highp int;\nprecision lowp sampler2D;\nprecision lowp samplerCube;\nuniform sampler2D tex;\nuniform int render_mode;\nuniform float alpha_mod;\nuniform vec4 base_color;\nuniform vec4 second_color;\n\nuniform vec3 ambient;\nuniform vec3 light_direction;\nuniform vec3 half_vector;\nuniform float shininess;\nuniform vec3 light_color;\nuniform float strenght;\n\nvarying vec4 color;\nvarying vec2 tex_coord;\nvarying vec3 normal;\nvarying float fragment_render_mode;\n\nvoid main(){\n  vec4 tmp4;\n  float diffuse = max(0.0, dot(normal, light_direction));\n  float specular = max(0.0, dot(normal, half_vector));\n  vec4 aux_color;\n  if(diffuse == 0.0)\n    specular = 0.0;\n  else\n    specular = pow(specular, shininess);\n\n  vec3 scattered_light = ambient + light_color * diffuse;\n  vec3 reflected_light = light_color * specular * strenght; \n\n  if(render_mode == 1){\naux_color = color;\n}\nelse if(render_mode == 2){\naux_color = texture2D(tex, tex_coord) * vec4(1.0, 1.0, 1.0, alpha_mod);\n}\n  else if(render_mode == 3){\n    aux_color = texture2D(tex, tex_coord);\n    }\n  else if(render_mode == 4){\n    aux_color = base_color;\n}\n  else if(render_mode == 5){\n    tmp4 = texture2D(tex, tex_coord);\n    if(tmp4.a == 0.0)\n      aux_color = base_color;\n    else\n      aux_color = texture2D(tex, tex_coord);\n    }\n  else if(render_mode == 6){\n    tmp4 = texture2D(tex, tex_coord);\n    aux_color = (1.0 - tmp4.a) * base_color + tmp4.a * second_color;\n}\n gl_FragColor = vec4(min(aux_color.rgb * scattered_light + reflected_light, vec3(1.0)),\n aux_color.a); \n\n}\n";
   GLchar *vertex_pointer = (GLchar *) &vertex_source;
@@ -577,6 +586,7 @@ void copyleft(void){
   
   // Initializing OpenGL background for copyleft symbol
   glGenTextures(1, &textures);
+  glGenTextures(1, &second_texture);
   glGenVertexArrays(1, &VAOs);
   glGenBuffers(1, &buffers);
   glGenBuffers(1, &EBO);
@@ -585,11 +595,15 @@ void copyleft(void){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 64, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, &copyleft_image);
+  glBindTexture(GL_TEXTURE_2D, second_texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, &license_image);
   glBindBuffer(GL_ARRAY_BUFFER, buffers);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 785 * sizeof(unsigned int), indices,
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 790 * sizeof(unsigned int), indices,
                GL_STATIC_DRAW);
-  glBufferData(GL_ARRAY_BUFFER, 3136 * sizeof(float), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 3168 * sizeof(float), vertices, GL_STATIC_DRAW);
   
 
   //glBindBuffer(GL_ARRAY_BUFFER, buffers);
@@ -645,19 +659,29 @@ void copyleft_loop(void){
     // Render, swap window, delay
   glClear(GL_COLOR_BUFFER_BIT);
   glClear(GL_DEPTH_BUFFER_BIT);
+  if(t < 3.5){
   glUniform1i(render_mode_loc, 1);//781
   glDrawElements(GL_TRIANGLE_STRIP, 391, GL_UNSIGNED_INT, 0);
   glDrawElements(GL_TRIANGLE_STRIP, 388, GL_UNSIGNED_INT,
                  (GLvoid *) (392 * sizeof(unsigned int)));
-  if(state >= 2){
+  }
+  if(state >= 2 && t < 3.5){
     glUniform1i(render_mode_loc, 2);
     if(t < 3.5)
       glUniform1f(alpha_loc,  (t-1.0) / 2.5);
+    glBindTexture(GL_TEXTURE_2D, textures);
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT,
                    (GLvoid *) (781 * sizeof(unsigned int)));
     glUniform1f(alpha_loc, 1.0);
   }
   if(t > 3.5){
+    glUniform1i(render_mode_loc, 2);
+    glBindTexture(GL_TEXTURE_2D, second_texture);
+    glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT,
+                   (GLvoid *) (785 * sizeof(unsigned int)));
+    //glUniform1f(alpha_loc, 1.0);
+  }
+  if(t > 7.0){
     // Exiting
     glDeleteVertexArrays(1, &VAOs);
     glDeleteBuffers(1, &EBO);

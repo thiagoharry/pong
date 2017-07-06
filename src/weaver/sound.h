@@ -1,5 +1,5 @@
-/*506:*/
-#line 11117 "cweb/weaver.w"
+/*507:*/
+#line 11125 "cweb/weaver.w"
 
 #ifndef _sound_h_
 #define _sound_h_
@@ -16,26 +16,26 @@ extern"C"{
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 11126 "cweb/weaver.w"
+#line 11134 "cweb/weaver.w"
 
-/*511:*/
-#line 11177 "cweb/weaver.w"
+/*512:*/
+#line 11185 "cweb/weaver.w"
 
 void _initialize_sound(void);
-/*:511*//*513:*/
-#line 11196 "cweb/weaver.w"
+/*:512*//*514:*/
+#line 11204 "cweb/weaver.w"
 
 void _finalize_sound(void);
-/*:513*//*523:*/
-#line 11322 "cweb/weaver.w"
+/*:514*//*524:*/
+#line 11330 "cweb/weaver.w"
 
 bool _select_sound_device(int position);
-/*:523*//*527:*/
-#line 11354 "cweb/weaver.w"
+/*:524*//*528:*/
+#line 11362 "cweb/weaver.w"
 
 int _current_sound_device(void);
-/*:527*//*557:*/
-#line 11954 "cweb/weaver.w"
+/*:528*//*558:*/
+#line 11962 "cweb/weaver.w"
 
 struct sound{
 unsigned long size;
@@ -43,20 +43,20 @@ int channels,freq,bitrate;
 ALuint _data;
 bool loaded;
 };
-/*:557*//*558:*/
-#line 11971 "cweb/weaver.w"
+/*:558*//*559:*/
+#line 11979 "cweb/weaver.w"
 
 struct sound*_new_sound(char*filename);
-/*:558*//*565:*/
-#line 12165 "cweb/weaver.w"
+/*:559*//*566:*/
+#line 12173 "cweb/weaver.w"
 
 void _play_sound(struct sound*snd);
-/*:565*//*569:*/
-#line 12200 "cweb/weaver.w"
+/*:566*//*570:*/
+#line 12208 "cweb/weaver.w"
 
 void _destroy_sound(struct sound*snd);
-/*:569*//*574:*/
-#line 12257 "cweb/weaver.w"
+/*:570*//*575:*/
+#line 12265 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF
 struct _thread_file_info{
@@ -82,8 +82,8 @@ bool _kill_switch;
 #endif
 };
 #endif
-/*:574*//*575:*/
-#line 12295 "cweb/weaver.w"
+/*:575*//*576:*/
+#line 12303 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF && W_THREAD_POOL >  0
 struct _thread_file_info _file_list[W_THREAD_POOL];
@@ -91,14 +91,14 @@ pthread_t _thread_list[W_THREAD_POOL];
 int _file_list_count;
 pthread_mutex_t _file_list_count_mutex;
 #endif
-/*:575*//*578:*/
-#line 12366 "cweb/weaver.w"
+/*:576*//*579:*/
+#line 12374 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF && W_THREAD_POOL >  0
 void*_file_list_thread(void*p);
 #endif
-/*:578*//*581:*/
-#line 12410 "cweb/weaver.w"
+/*:579*//*582:*/
+#line 12418 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF
 void _multithread_load_file(const char*filename,void*snd,
@@ -107,11 +107,11 @@ void*(*onload)(void*),
 void*(*onerror)(void*));
 
 #endif
-/*:581*/
-#line 11127 "cweb/weaver.w"
+/*:582*/
+#line 11135 "cweb/weaver.w"
 
 #ifdef __cplusplus
 }
 #endif
 #endif
-/*:506*/
+/*:507*/

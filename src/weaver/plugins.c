@@ -344,8 +344,8 @@ void _reload_all_plugins(void){
 return;
 }
 #endif
-/*:355*//*377:*/
-#line 8368 "cweb/weaver.w"
+/*:355*//*378:*/
+#line 8376 "cweb/weaver.w"
 
 bool _Wenable_plugin(int plugin_id){
 #ifdef W_PREVENT_SELF_ENABLING_PLUGINS
@@ -399,8 +399,8 @@ if(plugin_id>=_max_number_of_plugins||
 return false;
 return _plugins[plugin_id].enabled;
 }
-/*:377*//*381:*/
-#line 8458 "cweb/weaver.w"
+/*:378*//*382:*/
+#line 8466 "cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 void*_Wget_plugin_data(int plugin_id){
@@ -417,4 +417,4 @@ _plugins[plugin_id].plugin_data= data;
 return true;
 }
 #endif
-/*:381*/
+/*:382*/

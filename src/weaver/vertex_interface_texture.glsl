@@ -1,5 +1,5 @@
-/*488:*/
-#line 10769 "cweb/weaver.w"
+/*489:*/
+#line 10777 "cweb/weaver.w"
 
 #version 100
 
@@ -22,4 +22,4 @@ gl_Position= model_view_matrix*vec4(vertex_position,1.0);
 coordinate= vec2(((vertex_position[0]+0.5)),
 ((vertex_position[1]+0.5)));
 }
-/*:488*/
+/*:489*/
