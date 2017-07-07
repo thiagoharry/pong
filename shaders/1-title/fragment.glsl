@@ -22,6 +22,7 @@ varying mediump vec2 coordinate;
 
 void main(){
   vec4 color;
+  // P
   if(coordinate.x > 0.4 && coordinate.x < 0.413 &&
      coordinate.y < 0.9 && coordinate.y > 0.8){
     color = vec4(1.0, 1.0, 1.0, 1.0);
@@ -36,6 +37,23 @@ void main(){
   }
   else if(coordinate.x >= 0.426 && coordinate.x < 0.439 &&
           coordinate.y < 0.88 && coordinate.y > 0.86){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  // O
+  else if(coordinate.x >= 0.452 && coordinate.x < 0.465 &&
+     coordinate.y < 0.9 && coordinate.y > 0.8){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.465 && coordinate.x < 0.478 &&
+          coordinate.y < 0.9 && coordinate.y > 0.88){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.465 && coordinate.x < 0.478 &&
+          coordinate.y < 0.82 && coordinate.y > 0.8){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.478 && coordinate.x < 0.491 &&
+          coordinate.y < 0.9 && coordinate.y > 0.8){
     color = vec4(1.0, 1.0, 1.0, 1.0);
   }
   else{
