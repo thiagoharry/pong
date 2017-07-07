@@ -1,5 +1,5 @@
 /*215:*/
-#line 5070 "cweb/weaver.w"
+#line 5072 "cweb/weaver.w"
 
 /*66:*/
 #line 1910 "cweb/weaver.w"
@@ -8,7 +8,7 @@
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 5071 "cweb/weaver.w"
+#line 5073 "cweb/weaver.w"
 
 
 
@@ -21,39 +21,39 @@ extern int make_iso_compilers_happy;
 pthread_mutex_t _window_mutex;
 #endif
 /*218:*/
-#line 5130 "cweb/weaver.w"
+#line 5132 "cweb/weaver.w"
 
 Display*_dpy;
 /*:218*//*221:*/
-#line 5166 "cweb/weaver.w"
+#line 5168 "cweb/weaver.w"
 
 static int screen;
 /*:221*//*223:*/
-#line 5182 "cweb/weaver.w"
+#line 5184 "cweb/weaver.w"
 
 static int depth;
 /*:223*//*225:*/
-#line 5201 "cweb/weaver.w"
+#line 5203 "cweb/weaver.w"
 
 Window _window;
 /*:225*//*228:*/
-#line 5274 "cweb/weaver.w"
+#line 5276 "cweb/weaver.w"
 
 static XSetWindowAttributes at;
 /*:228*//*232:*/
-#line 5364 "cweb/weaver.w"
+#line 5366 "cweb/weaver.w"
 
 static GLXContext context;
 /*:232*//*233:*/
-#line 5370 "cweb/weaver.w"
+#line 5372 "cweb/weaver.w"
 
 static GLXFBConfig*fbConfigs;
 /*:233*/
-#line 5082 "cweb/weaver.w"
+#line 5084 "cweb/weaver.w"
 
 void _initialize_window(void){
 /*220:*/
-#line 5147 "cweb/weaver.w"
+#line 5149 "cweb/weaver.w"
 
 _dpy= XOpenDisplay(NULL);
 if(_dpy==NULL){
@@ -63,18 +63,18 @@ fprintf(stderr,
 exit(1);
 }
 /*:220*//*222:*/
-#line 5173 "cweb/weaver.w"
+#line 5175 "cweb/weaver.w"
 
 screen= DefaultScreen(_dpy);
 /*:222*//*224:*/
-#line 5191 "cweb/weaver.w"
+#line 5193 "cweb/weaver.w"
 
 depth= DisplayPlanes(_dpy,screen);
 #if W_DEBUG_LEVEL>=3
 printf("WARNING (3): Color depth: %d\n",depth);
 #endif
 /*:224*//*227:*/
-#line 5214 "cweb/weaver.w"
+#line 5216 "cweb/weaver.w"
 
 
 W.resolution_x= DisplayWidth(_dpy,screen);
@@ -107,7 +107,7 @@ W.height,
 0,0,
 0);
 /*:227*//*229:*/
-#line 5278 "cweb/weaver.w"
+#line 5280 "cweb/weaver.w"
 
 {
 #if W_WIDTH == 0 && W_HEIGHT == 0
@@ -126,7 +126,7 @@ PointerMotionMask|ExposureMask|StructureNotifyMask|
 FocusChangeMask);
 }
 /*:229*//*230:*/
-#line 5308 "cweb/weaver.w"
+#line 5310 "cweb/weaver.w"
 
 XMapWindow(_dpy,_window);
 {
@@ -158,7 +158,7 @@ XStoreName(_dpy,_window,W_PROG);
 XInitThreads();
 #endif
 /*:230*//*231:*/
-#line 5346 "cweb/weaver.w"
+#line 5348 "cweb/weaver.w"
 
 {
 int glx_major,glx_minor;
@@ -172,7 +172,7 @@ exit(1);
 }
 }
 /*:231*//*234:*/
-#line 5377 "cweb/weaver.w"
+#line 5379 "cweb/weaver.w"
 
 {
 int return_value;
@@ -196,7 +196,7 @@ exit(1);
 }
 }
 /*:234*//*236:*/
-#line 5418 "cweb/weaver.w"
+#line 5420 "cweb/weaver.w"
 
 {
 int context_attribs[]= 
@@ -232,23 +232,23 @@ exit(1);
 glXMakeCurrent(_dpy,_window,context);
 }
 /*:236*/
-#line 5084 "cweb/weaver.w"
+#line 5086 "cweb/weaver.w"
 
 }
 void _finalize_window(void){
 /*237:*/
-#line 5461 "cweb/weaver.w"
+#line 5463 "cweb/weaver.w"
 
 glXMakeCurrent(_dpy,None,NULL);
 glXDestroyContext(_dpy,context);
 XDestroyWindow(_dpy,_window);
 XCloseDisplay(_dpy);
 /*:237*/
-#line 5087 "cweb/weaver.w"
+#line 5089 "cweb/weaver.w"
 
 }
 /*248:*/
-#line 5666 "cweb/weaver.w"
+#line 5668 "cweb/weaver.w"
 
 void _Wresize_window(int width,int height){
 int old_width,old_height;
@@ -262,11 +262,11 @@ W.width= width;
 W.height= height;
 glViewport(0,0,W.width,W.height);
 /*433:*/
-#line 9464 "cweb/weaver.w"
+#line 9466 "cweb/weaver.w"
 
 _update_interface_screen_size();
 /*:433*//*475:*/
-#line 10517 "cweb/weaver.w"
+#line 10521 "cweb/weaver.w"
 
 {
 
@@ -295,14 +295,14 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 /*:475*/
-#line 5678 "cweb/weaver.w"
+#line 5680 "cweb/weaver.w"
 
 #ifdef W_MULTITHREAD
 pthread_mutex_unlock(&_window_mutex);
 #endif
 }
 /*:248*//*254:*/
-#line 5735 "cweb/weaver.w"
+#line 5737 "cweb/weaver.w"
 
 void _Wmove_window(int x,int y){
 #ifdef W_MULTITHREAD
@@ -316,7 +316,7 @@ pthread_mutex_unlock(&_window_mutex);
 #endif
 }
 /*:254*/
-#line 5089 "cweb/weaver.w"
+#line 5091 "cweb/weaver.w"
 
 #endif
 /*:215*/

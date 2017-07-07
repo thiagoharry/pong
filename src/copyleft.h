@@ -20,8 +20,9 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #ifndef _copyleft_h_
 #define _copyleft_h_
 
-void copyleft(void);
+#include "includes.h"
 
+void copyleft(void);
 void copyleft_loop(void);
 
 #endif

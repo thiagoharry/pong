@@ -497,7 +497,7 @@ Wdestroy_arena(_internal_arena);
 
 
 /*:148*//*152:*/
-#line 3689 "cweb/weaver.w"
+#line 3691 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 void*_Walloc(size_t size,char*filename,unsigned long line){
@@ -515,7 +515,7 @@ return _alloc(_internal_arena,size);
 }
 #endif
 /*:152*//*157:*/
-#line 3748 "cweb/weaver.w"
+#line 3750 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 int _Wbreakpoint(char*filename,unsigned long line){

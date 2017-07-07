@@ -1,5 +1,5 @@
 /*441:*/
-#line 9575 "cweb/weaver.w"
+#line 9577 "cweb/weaver.w"
 
 
 #version 100
@@ -16,7 +16,7 @@ precision lowp samplerCube;
 
 
 /*443:*/
-#line 9606 "cweb/weaver.w"
+#line 9608 "cweb/weaver.w"
 
 uniform vec4 object_color;
 uniform mat4 model_view_matrix;
@@ -25,7 +25,7 @@ uniform float time;
 uniform sampler2D texture1;
 uniform int integer;
 /*:443*/
-#line 9590 "cweb/weaver.w"
+#line 9592 "cweb/weaver.w"
 
 void main(){
 gl_FragData[0]= object_color;

@@ -36,6 +36,7 @@ static GLint rotation_loc, render_mode_loc, alpha_loc;
 static GLuint VAOs, EBO, buffers;
 static GLuint vertex_shader, fragment_shader, program, textures,
   second_texture;
+static GLint color_position, texture_coordinate, vertex_position;
 
 void copyleft(void){
   // The copyright symbol has 1045 vertices. No low poly here. 
@@ -489,13 +490,8 @@ void copyleft(void){
   GLchar *fragment_pointer = (GLchar *) &fragment_source;
   GLint scaling_loc, scaling2_loc,
     translating_loc, ambient_loc, light_dir_loc, half_loc,
-    shininess_loc, light_col_loc, strenght_loc, tex_loc, vertex_position;
-  GLint color_position, texture_coordinate;
+    shininess_loc, light_col_loc, strenght_loc, tex_loc;
   hit = W.new_sound("hit.wav");
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDisable(GL_CULL_FACE);
   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -683,10 +679,19 @@ void copyleft_loop(void){
   }
   if(t > 7.0){
     // Exiting
+    glDisableVertexAttribArray(vertex_position);
+    glDisableVertexAttribArray(color_position);
+    glDisableVertexAttribArray(texture_coordinate);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDeleteVertexArrays(1, &VAOs);
     glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &buffers);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glDeleteTextures(1, &textures);
+    glDeleteTextures(1, &second_texture);
     W.destroy_sound(hit);
     glEnable(GL_CULL_FACE);
     glDetachShader(program, vertex_shader);
@@ -694,7 +699,8 @@ void copyleft_loop(void){
     glDeleteProgram(program);
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
-    Wexit();
+    // Finally, let's exit from this mess:
+    Wloop(main_loop);
   }
 #if W_TARGET == W_ELF
   glXSwapBuffers(_dpy, _window);

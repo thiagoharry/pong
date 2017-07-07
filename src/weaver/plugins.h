@@ -1,5 +1,5 @@
 /*328:*/
-#line 7241 "cweb/weaver.w"
+#line 7243 "cweb/weaver.w"
 
 #ifndef _plugins_h_
 #define _plugins_h_
@@ -14,7 +14,7 @@ extern"C"{
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 7248 "cweb/weaver.w"
+#line 7250 "cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 #include <dlfcn.h>  
@@ -31,7 +31,7 @@ extern"C"{
 #endif
 #include <stdbool.h> 
 /*330:*/
-#line 7279 "cweb/weaver.w"
+#line 7281 "cweb/weaver.w"
 
 struct _plugin_data{
 #if W_TARGET == W_ELF
@@ -55,23 +55,23 @@ void*plugin_data;
 bool enabled,defined;
 };
 /*:330*//*331:*/
-#line 7336 "cweb/weaver.w"
+#line 7338 "cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 void _initialize_plugin(struct _plugin_data*data,char*path);
 #endif
 /*:331*//*333:*/
-#line 7474 "cweb/weaver.w"
+#line 7476 "cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 void _finalize_plugin(struct _plugin_data*data);
 #endif
 /*:333*//*335:*/
-#line 7516 "cweb/weaver.w"
+#line 7518 "cweb/weaver.w"
 
 bool _reload_plugin(int plugin_id);
 /*:335*//*341:*/
-#line 7666 "cweb/weaver.w"
+#line 7668 "cweb/weaver.w"
 
 struct _plugin_data*_plugins;
 int _max_number_of_plugins;
@@ -79,26 +79,26 @@ int _max_number_of_plugins;
 pthread_mutex_t _plugin_mutex;
 #endif
 /*:341*//*346:*/
-#line 7833 "cweb/weaver.w"
+#line 7835 "cweb/weaver.w"
 
 int _Wget_plugin(char*plugin_name);
 /*:346*//*350:*/
-#line 7867 "cweb/weaver.w"
+#line 7869 "cweb/weaver.w"
 
 void _reload_all_plugins(void);
 /*:350*//*377:*/
-#line 8370 "cweb/weaver.w"
+#line 8372 "cweb/weaver.w"
 
 bool _Wenable_plugin(int plugin_id);
 bool _Wdisable_plugin(int plugin_id);
 bool _Wis_enabled(int plugin_id);
 /*:377*//*381:*/
-#line 8461 "cweb/weaver.w"
+#line 8463 "cweb/weaver.w"
 
 void*_Wget_plugin_data(int plugin_id);
 bool _Wset_plugin_data(int plugin_id,void*data);
 /*:381*/
-#line 7263 "cweb/weaver.w"
+#line 7265 "cweb/weaver.w"
 
 #ifdef __cplusplus
 }
