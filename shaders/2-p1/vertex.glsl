@@ -23,7 +23,5 @@ varying mediump vec2 coordinate;
 
 void main(){
   coordinate = vec2(vertex_position[0] + 0.5, vertex_position[1] + 0.5);
-  coordinate.x = coordinate.x * 0.2 + 0.4;
-  coordinate.y = coordinate.y * 0.1 + 0.8;
   gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
 }

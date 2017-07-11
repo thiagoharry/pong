@@ -56,6 +56,37 @@ void main(){
           coordinate.y < 0.9 && coordinate.y > 0.8){
     color = vec4(1.0, 1.0, 1.0, 1.0);
   }
+  // N
+  else if(coordinate.x >= 0.504 && coordinate.x < 0.517 &&
+          coordinate.y < 0.9 && coordinate.y > 0.8){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.517 && coordinate.x < 0.530 &&
+          coordinate.y < 0.88 && coordinate.y > 0.86){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.530 && coordinate.x < 0.543 &&
+          coordinate.y < 0.9 && coordinate.y > 0.8){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  // G
+  else if(coordinate.x >= 0.556 && coordinate.x < 0.569 &&
+          coordinate.y < 0.9 && coordinate.y > 0.8){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.556 && coordinate.x < 0.595 &&
+          coordinate.y < 0.9 && coordinate.y > 0.88){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.556 && coordinate.x < 0.595 &&
+          coordinate.y < 0.82 && coordinate.y > 0.8){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  else if(coordinate.x >= 0.582 && coordinate.x < 0.595 &&
+          coordinate.y < 0.85 && coordinate.y > 0.8){
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  }
+  
   else{
     color = vec4(0.0, 0.0, 0.0, 0.0);
   }
