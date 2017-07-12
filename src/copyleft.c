@@ -700,7 +700,12 @@ void copyleft_loop(void){
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
     // Finally, let's exit from this mess:
-    Wloop(main_loop);
+#if W_TARGET == W_WEB
+    emscripten_cancel_main_loop();
+#endif
+    // Cleaning the errors
+    alGetError();
+    Wloop(title);
   }
 #if W_TARGET == W_ELF
   glXSwapBuffers(_dpy, _window);

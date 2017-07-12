@@ -19,9 +19,9 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 
 #include "title.h"
 
-#define TITLE_SHADER 1
-#define START_SHADER 2
-#define EXIT_SHADER  3
+#define TITLE_SHADER   1
+#define START_SHADER   2
+#define EXIT_SHADER    3
 
 static struct interface *pong, *p1, *p2, *quit, *cursor;
 static int menu_selection;
@@ -50,7 +50,6 @@ MAIN_LOOP title(void){
   menu_selection = 0;
   p1 -> integer = 1;
   p2 -> integer = 2;
-  //W.change_final_shader(TITLE_SHADER);
  LOOP_BODY:
   if(W.keyboard[W_UP] == 1){
     if(menu_selection != 0){
@@ -68,7 +67,13 @@ MAIN_LOOP title(void){
   }
   else if(W.keyboard[W_ENTER] == 1){
     W.play_sound(coin);
-    if(menu_selection == 2){
+    if(menu_selection == 0){
+      W.game -> players = 1;
+    }
+    else if(menu_selection == 1){
+      W.game -> players = 1;
+    }
+    else if(menu_selection == 2){
       Wexit_loop();
     }
   }

@@ -20,6 +20,7 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #ifndef _title_h_
 #define _title_h_
 
+#include "includes.h"
 #include "weaver/weaver.h"
 
 MAIN_LOOP title(void);

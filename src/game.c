@@ -20,22 +20,10 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #include "game.h"
 
 
-// This is the first main loop. It's used to load all the sound files
-// in the beginning and keep them loaded during all the game.
-MAIN_LOOP main_loop(void){ // The game loop
- LOOP_INIT: // Code executed during loop initialization
-  Wsubloop(title);
- LOOP_BODY: // Code executed every loop iteration
-  Wexit_loop();
-
- LOOP_END: // Code executed at the end of the loop
-  return;
-}
-
 int main(void){
   Winit(); // Initializes Weaver
 
-  //copyleft();
-  Wloop(main_loop);
+  copyleft();
+  //Wloop(main_loop);
   return 0;
 }
