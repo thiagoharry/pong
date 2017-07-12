@@ -21,7 +21,7 @@ uniform sampler2D texture1;
 varying mediump vec2 coordinate;
 
 void main(){
-  vec4 color;
+  vec4 color = vec4(1.0, 0.0, 0.0, 1.0);
   // P
   if(coordinate.x > 0.4 && coordinate.x < 0.413 &&
      coordinate.y < 0.9 && coordinate.y > 0.8){

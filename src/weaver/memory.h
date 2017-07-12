@@ -186,7 +186,7 @@ void Wtrash_arena(void*arena);
 void _initialize_memory();
 void _finalize_memory();
 /*:147*//*151:*/
-#line 3672 "cweb/weaver.w"
+#line 3671 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 void*_Walloc(size_t size,char*filename,unsigned long line);
@@ -198,7 +198,7 @@ void*_Winternal_alloc(size_t size);
 #define _iWalloc(n) _Winternal_alloc(n)
 #endif
 /*:151*//*155:*/
-#line 3727 "cweb/weaver.w"
+#line 3726 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 #define Walloc(a) W.alloc(a, __FILE__, __LINE__)
@@ -206,7 +206,7 @@ void*_Winternal_alloc(size_t size);
 #define Walloc(a) W.alloc(a)
 #endif
 /*:155*//*156:*/
-#line 3739 "cweb/weaver.w"
+#line 3738 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 int _Wbreakpoint(char*filename,unsigned long line);
@@ -215,7 +215,7 @@ int _Wbreakpoint(void);
 #endif
 void _Wtrash(void);
 /*:156*//*160:*/
-#line 3784 "cweb/weaver.w"
+#line 3783 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 #define Wbreakpoint() W.breakpoint(__FILE__, __LINE__)
