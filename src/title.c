@@ -50,6 +50,7 @@ MAIN_LOOP title(void){
   menu_selection = 0;
   p1 -> integer = 1;
   p2 -> integer = 2;
+  W.change_final_shader(4);
  LOOP_BODY:
   if(W.keyboard[W_UP] == 1){
     if(menu_selection != 0){
