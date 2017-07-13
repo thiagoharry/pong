@@ -28,6 +28,9 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
   a good example, don't try to imitate this. But I do because I can.
 */
 
+#if W_TARGET == W_WEB
+extern ALenum alGetError(void);
+#endif
                                      // Some  global variables
 static struct timeval beginning;
 static int state;
@@ -626,7 +629,7 @@ void copyleft(void){
   for(;;)
     copyleft_loop();
 #elif W_TARGET == W_WEB
-  emscripten_set_main_loop(copyleft_loop, 60, 1);
+  emscripten_set_main_loop(copyleft_loop, 0, 1);
 #endif
   // Finalizing
 

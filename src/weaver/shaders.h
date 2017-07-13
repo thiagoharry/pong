@@ -66,7 +66,7 @@ struct _shader*_shader_list;
 
 void _compile_and_insert_new_shader(char*dir,int position);
 /*:458*//*487:*/
-#line 10760 "cweb/weaver.w"
+#line 10789 "cweb/weaver.w"
 
 extern char _vertex_interface_texture[];
 extern char _fragment_interface_texture[];
@@ -76,11 +76,11 @@ GLfloat _framebuffer_matrix[16];
 
 int _custom_final_shader;
 /*:487*//*493:*/
-#line 10944 "cweb/weaver.w"
+#line 10973 "cweb/weaver.w"
 
 void _change_resolution(int resolution_x,int resolution_y);
 /*:493*//*498:*/
-#line 11032 "cweb/weaver.w"
+#line 11061 "cweb/weaver.w"
 
 void _change_final_shader(int type);
 /*:498*/

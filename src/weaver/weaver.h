@@ -395,7 +395,7 @@ float _period(void(*f)(void));
 #include <ctype.h>  
 #include "shaders.h"
 /*:438*//*478:*/
-#line 10639 "cweb/weaver.w"
+#line 10646 "cweb/weaver.w"
 
 
 
@@ -403,18 +403,21 @@ bool _use_non_default_render;
 
 GLuint _framebuffer;
 /*:478*//*481:*/
-#line 10672 "cweb/weaver.w"
+#line 10682 "cweb/weaver.w"
 
 
 
 GLuint _texture;
+
+
+int _texture_width,_texture_height;
 /*:481*//*483:*/
-#line 10710 "cweb/weaver.w"
+#line 10733 "cweb/weaver.w"
 
 
 GLuint _depth_stencil;
 /*:483*//*509:*/
-#line 11167 "cweb/weaver.w"
+#line 11196 "cweb/weaver.w"
 
 #include "sound.h"
 /*:509*/
@@ -459,18 +462,18 @@ long keyboard[0xffff];
 
 struct _mouse mouse;
 /*:296*//*502:*/
-#line 11056 "cweb/weaver.w"
+#line 11085 "cweb/weaver.w"
 
 
 int final_shader_integer;
 /*:502*//*519:*/
-#line 11247 "cweb/weaver.w"
+#line 11276 "cweb/weaver.w"
 
 
 int number_of_sound_devices;
 char**sound_device_name;
 /*:519*//*539:*/
-#line 11558 "cweb/weaver.w"
+#line 11587 "cweb/weaver.w"
 
 unsigned pending_files;
 #ifdef W_MULTITHREAD
@@ -626,31 +629,31 @@ void(*resize_interface)(struct interface*,float,float);
 
 void(*rotate_interface)(struct interface*,float);
 /*:426*//*495:*/
-#line 11011 "cweb/weaver.w"
+#line 11040 "cweb/weaver.w"
 
 void(*change_resolution)(int,int);
 /*:495*//*500:*/
-#line 11045 "cweb/weaver.w"
+#line 11074 "cweb/weaver.w"
 
 void(*change_final_shader)(int);
 /*:500*//*526:*/
-#line 11355 "cweb/weaver.w"
+#line 11384 "cweb/weaver.w"
 
 bool(*select_sound_device)(int);
 /*:526*//*530:*/
-#line 11388 "cweb/weaver.w"
+#line 11417 "cweb/weaver.w"
 
 int(*current_sound_device)(void);
 /*:530*//*564:*/
-#line 12178 "cweb/weaver.w"
+#line 12198 "cweb/weaver.w"
 
 struct sound*(*new_sound)(char*);
 /*:564*//*568:*/
-#line 12210 "cweb/weaver.w"
+#line 12230 "cweb/weaver.w"
 
 void(*play_sound)(struct sound*);
 /*:568*//*572:*/
-#line 12254 "cweb/weaver.w"
+#line 12274 "cweb/weaver.w"
 
 void(*destroy_sound)(struct sound*);
 /*:572*/

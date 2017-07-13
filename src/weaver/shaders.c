@@ -311,7 +311,7 @@ if(fragment_source!=NULL)Wfree(fragment_source);
 if(vertex_source!=NULL)Wfree(vertex_source);
 }
 /*:459*//*488:*/
-#line 10770 "cweb/weaver.w"
+#line 10799 "cweb/weaver.w"
 
 char _vertex_interface_texture[]= {
 #include "vertex_interface_texture.data"
@@ -320,7 +320,7 @@ char _fragment_interface_texture[]= {
 #include "fragment_interface_texture.data"
 ,0x00};
 /*:488*//*494:*/
-#line 10948 "cweb/weaver.w"
+#line 10977 "cweb/weaver.w"
 
 void _change_resolution(int resolution_x,int resolution_y){
 int width,height,old_width= W.width,old_height= W.height;
@@ -347,10 +347,10 @@ GL_TEXTURE_2D,_texture,0);
 glDeleteRenderbuffers(1,&_depth_stencil);
 glGenRenderbuffers(1,&_depth_stencil);
 glBindRenderbuffer(GL_RENDERBUFFER,_depth_stencil);
-glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH24_STENCIL8,
+glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT16,
 W.width,W.height);
 
-glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_STENCIL_ATTACHMENT,
+glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,
 GL_RENDERBUFFER,_depth_stencil);
 glBindFramebuffer(GL_FRAMEBUFFER,0);
 
@@ -380,7 +380,7 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 /*:494*//*499:*/
-#line 11036 "cweb/weaver.w"
+#line 11065 "cweb/weaver.w"
 
 void _change_final_shader(int type){
 _use_non_default_render= true;

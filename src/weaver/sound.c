@@ -1,5 +1,5 @@
 /*508:*/
-#line 11147 "cweb/weaver.w"
+#line 11176 "cweb/weaver.w"
 
 #include <string.h>  
 #include <sys/stat.h>  
@@ -17,19 +17,19 @@ extern ALenum alGetError(void);
 #endif
 
 /*511:*/
-#line 11180 "cweb/weaver.w"
+#line 11209 "cweb/weaver.w"
 
 static ALCdevice*default_device;
 /*:511*//*532:*/
-#line 11408 "cweb/weaver.w"
+#line 11437 "cweb/weaver.w"
 
 static ALCcontext*default_context;
 /*:532*//*534:*/
-#line 11433 "cweb/weaver.w"
+#line 11462 "cweb/weaver.w"
 
 static ALuint default_source[5];
 /*:534*//*544:*/
-#line 11626 "cweb/weaver.w"
+#line 11655 "cweb/weaver.w"
 
 static ALuint extract_wave(const char*filename,unsigned long*size,int*freq,
 int*channels,int*bitrate,bool*error){
@@ -42,7 +42,7 @@ if(fp==NULL){
 return 0;
 }
 /*545:*/
-#line 11646 "cweb/weaver.w"
+#line 11675 "cweb/weaver.w"
 
 {
 char data[5];
@@ -58,7 +58,7 @@ return 0;
 }
 }
 /*:545*//*546:*/
-#line 11669 "cweb/weaver.w"
+#line 11698 "cweb/weaver.w"
 
 {
 int i;
@@ -78,7 +78,7 @@ multiplier*= 256;
 }
 }
 /*:546*//*547:*/
-#line 11694 "cweb/weaver.w"
+#line 11723 "cweb/weaver.w"
 
 {
 char data[5];
@@ -97,7 +97,7 @@ return 0;
 *size-= 4;
 }
 /*:547*//*548:*/
-#line 11719 "cweb/weaver.w"
+#line 11748 "cweb/weaver.w"
 
 {
 int c,i;
@@ -114,7 +114,7 @@ return 0;
 *size-= 8;
 }
 /*:548*//*549:*/
-#line 11745 "cweb/weaver.w"
+#line 11774 "cweb/weaver.w"
 
 {
 int i,format= 0;
@@ -143,7 +143,7 @@ return 0;
 *size-= 2;
 }
 /*:549*//*550:*/
-#line 11777 "cweb/weaver.w"
+#line 11806 "cweb/weaver.w"
 
 {
 int i;
@@ -166,7 +166,7 @@ multiplier*= 256;
 *size-= 2;
 }
 /*:550*//*551:*/
-#line 11802 "cweb/weaver.w"
+#line 11831 "cweb/weaver.w"
 
 {
 int i;
@@ -189,7 +189,7 @@ multiplier*= 256;
 *size-= 4;
 }
 /*:551*//*552:*/
-#line 11829 "cweb/weaver.w"
+#line 11858 "cweb/weaver.w"
 
 {
 int c,i;
@@ -206,7 +206,7 @@ return 0;
 *size-= 6;
 }
 /*:552*//*553:*/
-#line 11849 "cweb/weaver.w"
+#line 11878 "cweb/weaver.w"
 
 {
 int i;
@@ -229,7 +229,7 @@ multiplier*= 256;
 *size-= 2;
 }
 /*:553*//*554:*/
-#line 11876 "cweb/weaver.w"
+#line 11905 "cweb/weaver.w"
 
 {
 int c,i;
@@ -246,7 +246,7 @@ return 0;
 *size-= 8;
 }
 /*:554*//*555:*/
-#line 11896 "cweb/weaver.w"
+#line 11925 "cweb/weaver.w"
 
 {
 returned_data= Walloc((size_t)*size);
@@ -264,7 +264,7 @@ return 0;
 fread(returned_data,*size,1,fp);
 }
 /*:555*//*556:*/
-#line 11918 "cweb/weaver.w"
+#line 11947 "cweb/weaver.w"
 
 {
 ALenum status;
@@ -274,16 +274,7 @@ alGenBuffers(1,&returned_buffer);
 status= alGetError();
 if(status!=AL_NO_ERROR){
 fprintf(stderr,"WARNING(0)): No sound buffer could be created. "
-"alGenBuffers failed. ");
-if(status==AL_INVALID_VALUE){
-fprintf(stderr,"Internal error: buffer array isn't large enough.\n");
-}
-else if(status==AL_OUT_OF_MEMORY){
-fprintf(stderr,"Internal error: out of memory.\n");
-}
-else{
-fprintf(stderr,"Unknown error (%d).\n",status);
-}
+"alGenBuffers failed. Sound may not work.\n");
 Wfree(returned_data);
 *error= true;
 fclose(fp);
@@ -315,15 +306,15 @@ Wfree(returned_data);
 fclose(fp);
 }
 /*:556*/
-#line 11637 "cweb/weaver.w"
+#line 11666 "cweb/weaver.w"
 
 return returned_buffer;
 }
 /*:544*/
-#line 11163 "cweb/weaver.w"
+#line 11192 "cweb/weaver.w"
 
 /*561:*/
-#line 12105 "cweb/weaver.w"
+#line 12125 "cweb/weaver.w"
 
 #if W_TARGET == W_WEB
 static void onerror_sound(unsigned undocumented,void*snd,
@@ -340,7 +331,7 @@ pthread_mutex_unlock(&(W._pending_files_mutex));
 }
 #endif
 /*:561*//*562:*/
-#line 12127 "cweb/weaver.w"
+#line 12147 "cweb/weaver.w"
 
 #if W_TARGET == W_WEB
 static void onload_sound(unsigned undocumented,void*snd,
@@ -375,7 +366,7 @@ pthread_mutex_unlock(&(W._pending_files_mutex));
 }
 #endif
 /*:562*//*563:*/
-#line 12166 "cweb/weaver.w"
+#line 12186 "cweb/weaver.w"
 
 #if W_TARGET == W_WEB
 static void onprogress_sound(unsigned int undocumented,void*snd,
@@ -384,7 +375,7 @@ return;
 }
 #endif
 /*:563*//*585:*/
-#line 12547 "cweb/weaver.w"
+#line 12567 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF
 static void*process_sound(void*p){
@@ -424,7 +415,7 @@ return NULL;
 }
 #endif
 /*:585*//*586:*/
-#line 12590 "cweb/weaver.w"
+#line 12610 "cweb/weaver.w"
 
 #if W_TARGET == W_ELF && defined(W_MULTITHREAD)
 static void*onload_sound(void*p){
@@ -441,22 +432,22 @@ return NULL;
 }
 #endif
 /*:586*/
-#line 11164 "cweb/weaver.w"
+#line 11193 "cweb/weaver.w"
 
 /*513:*/
-#line 11195 "cweb/weaver.w"
+#line 11224 "cweb/weaver.w"
 
 void _initialize_sound(void){
 default_device= alcOpenDevice(NULL);
 if(default_device==NULL)
 fprintf(stderr,"WARNING (0): No sound device detected.\n");
 /*520:*/
-#line 11255 "cweb/weaver.w"
+#line 11284 "cweb/weaver.w"
 
 W.number_of_sound_devices= 0;
 W.sound_device_name= NULL;
 /*:520*//*521:*/
-#line 11270 "cweb/weaver.w"
+#line 11299 "cweb/weaver.w"
 
 {
 char*devices,*c;
@@ -476,7 +467,7 @@ if(W.number_of_sound_devices==0)
 goto AFTER_SOUND_INITIALIZATION;
 }
 /*:521*//*522:*/
-#line 11294 "cweb/weaver.w"
+#line 11323 "cweb/weaver.w"
 
 {
 char*devices,*c;
@@ -502,7 +493,7 @@ break;
 }
 }
 /*:522*//*533:*/
-#line 11412 "cweb/weaver.w"
+#line 11441 "cweb/weaver.w"
 
 {
 if(default_device){
@@ -513,7 +504,7 @@ alcMakeContextCurrent(default_context);
 alGetError();
 }
 /*:533*//*535:*/
-#line 11439 "cweb/weaver.w"
+#line 11468 "cweb/weaver.w"
 
 {
 ALenum error;
@@ -527,17 +518,17 @@ fprintf(stderr,"WARNING(0)): No sound source could be created. "
 }
 }
 /*:535*/
-#line 11200 "cweb/weaver.w"
+#line 11229 "cweb/weaver.w"
 
 AFTER_SOUND_INITIALIZATION:
 return;
 }
 /*:513*//*515:*/
-#line 11214 "cweb/weaver.w"
+#line 11243 "cweb/weaver.w"
 
 void _finalize_sound(void){
 /*523:*/
-#line 11324 "cweb/weaver.w"
+#line 11353 "cweb/weaver.w"
 
 {
 if(W.sound_device_name!=NULL)
@@ -545,7 +536,7 @@ Wfree(W.sound_device_name);
 }
 
 /*:523*//*536:*/
-#line 11455 "cweb/weaver.w"
+#line 11484 "cweb/weaver.w"
 
 {
 alDeleteSources(5,default_source);
@@ -553,14 +544,14 @@ if(default_context!=NULL)
 alcDestroyContext(default_context);
 }
 /*:536*/
-#line 11216 "cweb/weaver.w"
+#line 11245 "cweb/weaver.w"
 
 
 
 alcCloseDevice(default_device);
 }
 /*:515*//*525:*/
-#line 11340 "cweb/weaver.w"
+#line 11369 "cweb/weaver.w"
 
 bool _select_sound_device(int position){
 if(position<0||position>=W.number_of_sound_devices)
@@ -568,7 +559,7 @@ return false;
 
 
 /*537:*/
-#line 11467 "cweb/weaver.w"
+#line 11496 "cweb/weaver.w"
 
 {
 alDeleteSources(5,default_source);
@@ -576,14 +567,14 @@ if(default_context!=NULL)
 alcDestroyContext(default_context);
 }
 /*:537*/
-#line 11346 "cweb/weaver.w"
+#line 11375 "cweb/weaver.w"
 
 alcCloseDevice(default_device);
 default_device= alcOpenDevice(W.sound_device_name[position]);
 return true;
 }
 /*:525*//*529:*/
-#line 11372 "cweb/weaver.w"
+#line 11401 "cweb/weaver.w"
 
 int _current_sound_device(void){
 int i;
@@ -597,7 +588,7 @@ return i;
 return-1;
 }
 /*:529*//*560:*/
-#line 12004 "cweb/weaver.w"
+#line 12024 "cweb/weaver.w"
 
 struct sound*_new_sound(char*filename){
 char*complete_path;
@@ -681,7 +672,7 @@ return snd;
 #endif
 }
 /*:560*//*567:*/
-#line 12192 "cweb/weaver.w"
+#line 12212 "cweb/weaver.w"
 
 void _play_sound(struct sound*snd){
 if(!snd->loaded)return;
@@ -697,7 +688,7 @@ status= alGetError();
 alSourcePlay(default_source[i]);
 }
 /*:567*//*571:*/
-#line 12227 "cweb/weaver.w"
+#line 12247 "cweb/weaver.w"
 
 void _destroy_sound(struct sound*snd){
 
@@ -724,7 +715,7 @@ alDeleteBuffers(1,&(snd->_data));
 Wfree(snd);
 }
 /*:571*//*580:*/
-#line 12394 "cweb/weaver.w"
+#line 12414 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF && W_THREAD_POOL >  0
 void*_file_list_thread(void*p){
@@ -746,7 +737,7 @@ pthread_mutex_unlock(&(file_info->mutex));
 }
 #endif
 /*:580*//*583:*/
-#line 12454 "cweb/weaver.w"
+#line 12474 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF && W_THREAD_POOL == 0
 void _multithread_load_file(const char*filename,void*snd,
@@ -788,7 +779,7 @@ exit(1);
 }
 #endif
 /*:583*//*584:*/
-#line 12499 "cweb/weaver.w"
+#line 12519 "cweb/weaver.w"
 
 #if defined(W_MULTITHREAD) && W_TARGET == W_ELF && W_THREAD_POOL >  0
 void _multithread_load_file(const char*filename,void*snd,
@@ -829,6 +820,6 @@ pthread_cond_signal(&(_file_list[thread_number].condition));
 }
 #endif
 /*:584*/
-#line 11165 "cweb/weaver.w"
+#line 11194 "cweb/weaver.w"
 
 /*:508*/
