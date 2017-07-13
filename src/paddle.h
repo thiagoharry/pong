@@ -1,5 +1,5 @@
 /*
-Copyright (c) Thiago Leucz Astrizi 2017
+Copyright (c) harry,,,, 2017
 
 This file is part of pong.
 
@@ -11,20 +11,26 @@ the Free Software Foundation, either version 3 of the License, or
 pong is distributed in the hope that it will be useful,
 but WITHOUT ANY  WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS  FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more  details.
+GNU Affero General Public License for more  details.
 
-You should have received a copy of the GNU General Public License
+You should have received a copy of the GNU Affero General Public License
 along with pong. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "game.h"
+#ifndef _paddle_h_
+#define _paddle_h_
 
+#include "weaver/weaver.h"
 
-int main(void){
-  Winit(); // Initializes Weaver
-  W.game -> game_completed = false;
-  W.hide_cursor();
-  copyleft();
-  //Wloop(main_loop);
-  return 0;
-}
+#define PADDLE_SPEED (W.height/40)
+#define PADDLE_WIDTH (W.width/40)
+#define PADDLE_HEIGHT (W.height/7)
+
+#define PADDLE_SHADER 6
+
+struct interface *paddle1, *paddle2;
+
+void initialize_paddle(void);
+void move_paddle(struct interface *, int, long, long);
+
+#endif

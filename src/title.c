@@ -23,17 +23,19 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #define START_SHADER   2
 #define EXIT_SHADER    3
 
-static struct interface *pong, *p1, *p2, *quit, *cursor;
+static struct interface *pong_title, *p1, *p2, *quit, *cursor;
 static int menu_selection;
 
-struct sound *collision1, *collision2, *coin;
+struct sound *collision1, *collision2, *ball_miss, *revelation,
+  *danger_sound, *restoration, *explosion_sound, *failure_sound,
+  *victory_sound, *coin;
 
 // The title screen is entirely in the screen shader. We just set the
 // custom shader to the entire screen:
 MAIN_LOOP title(void){
  LOOP_INIT:
-  pong = W.new_interface(TITLE_SHADER, W.width / 2, W.height - 100,
-                         250, 100);
+  pong_title = W.new_interface(TITLE_SHADER, W.width / 2, W.height - 100,
+                               250, 100);
   p1 = W.new_interface(START_SHADER, W.width / 2, 250,
                          200, 25);
   p2 = W.new_interface(START_SHADER, W.width / 2, 200,
@@ -44,9 +46,17 @@ MAIN_LOOP title(void){
                            W.width / 2, 250,
                            210, 35,
                            1.0, 1.0, 1.0, 1.0);
+  // Loading all the sounds here and keeping them
   collision1 = W.new_sound("collision1.wav");
   collision2 = W.new_sound("collision2.wav");
   coin = W.new_sound("coin.wav");
+  ball_miss = W.new_sound("ball_miss.wav");
+  revelation = W.new_sound("revelation.wav");
+  danger_sound = W.new_sound("danger.wav");
+  restoration = W.new_sound("restore.wav");
+  explosion_sound = W.new_sound("explosion.wav");
+  failure_sound = W.new_sound("failure.wav");
+  victory_sound = W.new_sound("victory.wav");
   menu_selection = 0;
   p1 -> integer = 1;
   p2 -> integer = 2;
@@ -72,9 +82,11 @@ MAIN_LOOP title(void){
     W.play_sound(coin);
     if(menu_selection == 0){
       W.game -> players = 1;
+      Wsubloop(pong);
     }
     else if(menu_selection == 1){
-      W.game -> players = 1;
+      W.game -> players = 2;
+      Wsubloop(pong);
     }
     else if(menu_selection == 2){
       Wexit_loop();
