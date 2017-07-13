@@ -22,7 +22,7 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 
 int main(void){
   Winit(); // Initializes Weaver
-
+  W.game -> game_completed = false;
   copyleft();
   //Wloop(main_loop);
   return 0;

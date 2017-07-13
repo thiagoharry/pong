@@ -51,6 +51,8 @@ MAIN_LOOP title(void){
   p1 -> integer = 1;
   p2 -> integer = 2;
   W.change_final_shader(4);
+  if(W.game -> game_completed)
+    W.final_shader_integer = 1;
  LOOP_BODY:
   if(W.keyboard[W_UP] == 1){
     if(menu_selection != 0){
@@ -77,6 +79,8 @@ MAIN_LOOP title(void){
     else if(menu_selection == 2){
       Wexit_loop();
     }
+    if(W.game -> game_completed)
+      W.final_shader_integer = 1;
   }
  LOOP_END:
   return;
