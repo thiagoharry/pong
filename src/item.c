@@ -40,3 +40,39 @@ void update_item(void){
 void hide_item(void){
   item -> visible = false;
 }
+
+void show_item(void){
+  int x_pos;
+  if(ball -> x < W.width / 2)
+    x_pos = W.width - paddle2 -> width - 2 * ball -> width;
+  else
+    x_pos = paddle2 -> width + 2 * ball -> width;
+  item -> visible = true;
+  W.move_interface(item, x_pos, W.random() % W.height);
+}
+
+void get_item(void){
+  switch(number_of_items){
+  case 0:
+    paddle1 -> integer = 10;
+    break;
+  case 1:
+    paddle2 -> integer = 10;
+    break;
+  case 2:
+    ball -> integer = 1;
+    break;
+  case 3:
+    score1 -> integer += 10;
+    break;
+  case 4:
+    score2 -> integer += 10;
+    break;
+  default:
+    W.final_shader_integer = 10;
+    break;
+  }
+  W.play_sound(revelation);
+  number_of_items ++;
+  hide_item();
+}

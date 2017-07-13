@@ -53,6 +53,7 @@ int score_ball(void){
     who_scored = 1;
   }
   if(ret){
+    hide_item();
     // the ball speed should be slower now in some cases
     if((W.game -> players == 1 && who_scored == 2) ||
        W.game -> players > 1){
@@ -152,5 +153,13 @@ void update_ball(void){
       W.play_sound(collision1);
     else
       W.play_sound(collision2);
+  }
+  // Ball collision with item:
+  if(item -> visible){
+    float dst = sqrtf((ball -> x - item -> x) * (ball -> x - item -> x) +
+                      (ball -> y - item -> y) * (ball -> y - item -> y));
+    if(dst < BALL_WIDTH * 1.1){
+      get_item();
+    }
   }
 }

@@ -21,6 +21,7 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 
 static bool game_ended, beginning_of_game;
 static unsigned long long end_moment;
+static int ball_old_x;
 
 MAIN_LOOP pong(void){
  LOOP_INIT:
@@ -31,6 +32,7 @@ MAIN_LOOP pong(void){
     W.final_shader_integer = 0;
   game_ended = false;
   beginning_of_game = true;
+  number_of_items = 0;
   initialize_paddle();
   initialize_score();
   initialize_ball();
@@ -97,6 +99,7 @@ MAIN_LOOP pong(void){
     paddle_ai(2);
   
   // Check if ball collided, if not move it:
+  ball_old_x = ball -> x;
   if(!game_ended){
     if(collision_ball()){
       if(beginning_of_game && ball_dy != 0.0)
@@ -116,10 +119,29 @@ MAIN_LOOP pong(void){
     }
     // Animating items
     update_item();
+
+    // Ball crossed the screen center, going to left:
+    if(ball_old_x >= W.width / 2 && ball -> x < W.width / 2){
+      if(!game_ended){
+        if(!(item -> visible) && number_of_items < 6)
+          if(W.random() % 5 < 2)
+            show_item();
+      }
+    }
+    // Ball rossed the center, going right:
+    if(ball_old_x < W.width / 2 && ball -> x >= W.width / 2){
+      if(!game_ended && W.game -> players > 1){
+        if(!(item -> visible) && number_of_items < 6)
+          if(W.random() % 5 < 2)
+            show_item();
+      }
+    }
   }
   
   // Checking for end of game:
   if(game_ended && ((W.t - end_moment > 3000000))){
+    if(number_of_items == 6)
+      W.game -> game_completed = true;
     Wexit_loop();
   }
   

@@ -27,8 +27,12 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 
 struct interface *item;
 
+int number_of_items;
+
 void initialize_item(void);
 void update_item(void);
 void hide_item(void);
+void show_item(void);
+void get_item(void);
 
 #endif
