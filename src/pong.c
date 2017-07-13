@@ -23,20 +23,31 @@ static bool game_ended, beginning_of_game;
 static unsigned long long end_moment;
 static int ball_old_x;
 
+
 MAIN_LOOP pong(void){
  LOOP_INIT:
   W.change_final_shader(5);
-  if(W.game -> game_completed)
-    W.final_shader_integer = 1;
-  else
-    W.final_shader_integer = 0;
   game_ended = false;
   beginning_of_game = true;
+  in_danger = false;
   number_of_items = 0;
   initialize_paddle();
-  initialize_score();
   initialize_ball();
+  initialize_score();
   initialize_item();
+  initialize_danger();
+  if(W.game -> game_completed){
+    W.final_shader_integer = 1;
+    paddle1 -> integer = 10;
+    paddle2 -> integer = 10;
+    ball -> integer = 1;
+    score1 -> integer = 10;
+    score2 -> integer = 10;
+  }
+  else{
+    W.final_shader_integer = 0;
+  }
+  
  LOOP_BODY:
   if(W.keyboard[W_ESC])
     Wexit_loop();
@@ -113,38 +124,67 @@ MAIN_LOOP pong(void){
          item -> x < W.width / 2){
         hide_item();
       }
+      // Check if we need to hide danger:
+      if(danger -> visible && ball -> x > W.width / 2 &&
+         danger -> x > W.width / 2)
+        hide_danger();
+      else if(danger -> visible && ball -> x < W.width / 2 &&
+              danger -> x < W.width / 2)
+        hide_danger();
     }
     else{
       update_ball();
     }
+
     // Animating items
     update_item();
 
     // Ball crossed the screen center, going to left:
     if(ball_old_x >= W.width / 2 && ball -> x < W.width / 2){
       if(!game_ended){
-        if(!(item -> visible) && number_of_items < 6)
+        if(!(item -> visible) && number_of_items < 6){
           if(W.random() % 5 < 2)
-            show_item();
+            show_item(); // Regenerate item
+        }
+        if(!beginning_of_game && !(danger -> visible) && !in_danger){
+          if(W.random() % 5 < 2)
+            show_danger(); // Regenerate danger
+        }
       }
     }
-    // Ball rossed the center, going right:
+
+    // Ball crossed the center, going right:
     if(ball_old_x < W.width / 2 && ball -> x >= W.width / 2){
       if(!game_ended && W.game -> players > 1){
-        if(!(item -> visible) && number_of_items < 6)
+        if(!(item -> visible) && number_of_items < 6){
           if(W.random() % 5 < 2)
-            show_item();
+            show_item(); // Regenerate item
+        }
+        if(!beginning_of_game && !(danger -> visible) && !in_danger){
+          if(W.random() % 5 < 2)
+            show_danger(); // Regenerate danger
+        }
       }
     }
   }
-  
+
+  // If we spent more than DANGER_TIME in danger, revert to normal.
+  // And the ondulating screen is too evil to be allowed fot so much
+  // time if the game is in the end.
+  if(in_danger && ((W.t - danger_time > DANGER_TIME) ||
+     ((W.final_shader_integer == 5 || W.final_shader_integer == 15) &&
+      score1 -> integer == 4 && (W.t - danger_time > DANGER_TIME / 2)))){
+    end_danger();
+    in_danger = false;
+  }
+
   // Checking for end of game:
   if(game_ended && ((W.t - end_moment > 3000000))){
     if(number_of_items == 6)
       W.game -> game_completed = true;
     Wexit_loop();
   }
-  
+
  LOOP_END:
   return;
 }

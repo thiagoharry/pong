@@ -25,3 +25,4 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #include "score.h"
 #include "ball.h"
 #include "item.h"
+#include "danger.h"

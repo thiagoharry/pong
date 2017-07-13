@@ -54,6 +54,7 @@ int score_ball(void){
   }
   if(ret){
     hide_item();
+    hide_danger();
     // the ball speed should be slower now in some cases
     if((W.game -> players == 1 && who_scored == 2) ||
        W.game -> players > 1){
@@ -160,6 +161,15 @@ void update_ball(void){
                       (ball -> y - item -> y) * (ball -> y - item -> y));
     if(dst < BALL_WIDTH * 1.1){
       get_item();
+    }
+  }
+  // Ball collision with danger
+  if(danger -> visible){
+    float dst = sqrtf((ball -> x - danger -> x) * (ball -> x - danger -> x) +
+                      (ball -> y - danger -> y) * (ball -> y - danger -> y));
+    if(dst < BALL_WIDTH * 1.1){
+      get_danger();
+      danger -> visible = false;
     }
   }
 }

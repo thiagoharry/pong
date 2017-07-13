@@ -1,5 +1,5 @@
 /*
-Copyright (c) harry,,,, 2017
+Copyright (c) Thiago "Harry" Leucz Astrizi, 2017
 
 This file is part of pong.
 
@@ -17,15 +17,22 @@ You should have received a copy of the GNU Affero General Public License
 along with pong. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _pong_h_
-#define _pong_h_
-#include "weaver/weaver.h"
+#ifndef _danger_h_
+#define _danger_h_
 
+#include "weaver/weaver.h"
 #include "includes.h"
 
-bool in_danger;
-unsigned long long danger_time;
+#define DANGER_SHADER 10
 
-MAIN_LOOP pong(void);
+#define DANGER_TIME 10000000ul
+
+struct interface *danger;
+
+void initialize_danger(void);
+void show_danger(void);
+void hide_danger(void);
+void end_danger(void);
+void get_danger(void);
 
 #endif
