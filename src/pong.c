@@ -34,9 +34,10 @@ MAIN_LOOP pong(void){
   initialize_paddle();
   initialize_score();
   initialize_ball();
+  initialize_item();
  LOOP_BODY:
-  //if(W.keyboard[W_ESC])
-  //Wexit_loop();
+  if(W.keyboard[W_ESC])
+    Wexit_loop();
 
   // First we check if someone scored
   {
@@ -93,10 +94,27 @@ MAIN_LOOP pong(void){
   }
 
   // Check if ball collided, if not move it:
-  if(!game_ended && !collision_ball()){
-    update_ball();
+  if(!game_ended){
+    if(collision_ball()){
+      if(beginning_of_game && ball_dy != 0.0)
+        beginning_of_game = false;
+      // Check if we need to hide item
+      if(!beginning_of_game && ball -> x > W.width / 2 &&
+         item -> x > W.width / 2){
+        hide_item();
+      }
+      else if(!beginning_of_game && ball -> x < W.width / 2 &&
+         item -> x < W.width / 2){
+        hide_item();
+      }
+    }
+    else{
+      update_ball();
+    }
+    // Animating items
+    update_item();
   }
-
+  
   // Checking for end of game:
   if(game_ended && ((W.t - end_moment > 3000000))){
     Wexit_loop();
