@@ -30,6 +30,7 @@ MAIN_LOOP pong(void){
     W.final_shader_integer = 0;
   game_ended = false;
   initialize_paddle();
+  initialize_score();
   
  LOOP_BODY:
   if(W.keyboard[W_ESC])
