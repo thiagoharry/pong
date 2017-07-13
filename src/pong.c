@@ -35,14 +35,14 @@ MAIN_LOOP pong(void){
   initialize_score();
   initialize_ball();
  LOOP_BODY:
-  if(W.keyboard[W_ESC])
-    Wexit_loop();
+  //if(W.keyboard[W_ESC])
+  //Wexit_loop();
 
   // First we check if someone scored
   {
     int score;
     if((score = score_ball())){
-      if(score == 5){
+      if(score == 5 && !game_ended){
         game_ended = true;
         if(W.game -> players == 1){
           int player1_score = get_score(1);
@@ -65,7 +65,7 @@ MAIN_LOOP pong(void){
           W.play_sound(victory_sound);
         }
       }
-      else{ // Someone marked a point, but the game didn't end
+      else if(!game_ended){ // Someone marked a point, but the game didn't end
         W.play_sound(ball_miss);
         reset_ball();
       }
@@ -93,8 +93,13 @@ MAIN_LOOP pong(void){
   }
 
   // Check if ball collided, if not move it:
-  if(!collision_ball()){
+  if(!game_ended && !collision_ball()){
     update_ball();
+  }
+
+  // Checking for end of game:
+  if(game_ended && ((W.t - end_moment > 3000000))){
+    Wexit_loop();
   }
   
  LOOP_END:
