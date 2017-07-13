@@ -26,10 +26,6 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 static struct interface *pong_title, *p1, *p2, *quit, *cursor;
 static int menu_selection;
 
-struct sound *collision1, *collision2, *ball_miss, *revelation,
-  *danger_sound, *restoration, *explosion_sound, *failure_sound,
-  *victory_sound, *coin;
-
 // The title screen is entirely in the screen shader. We just set the
 // custom shader to the entire screen:
 MAIN_LOOP title(void){

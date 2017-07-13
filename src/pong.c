@@ -19,7 +19,8 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 
 #include "pong.h"
 
-static bool game_ended;
+static bool game_ended, beginning_of_game;
+static unsigned long long end_moment;
 
 MAIN_LOOP pong(void){
  LOOP_INIT:
@@ -29,12 +30,49 @@ MAIN_LOOP pong(void){
   else
     W.final_shader_integer = 0;
   game_ended = false;
+  beginning_of_game = true;
   initialize_paddle();
   initialize_score();
-  
+  initialize_ball();
  LOOP_BODY:
   if(W.keyboard[W_ESC])
     Wexit_loop();
+
+  // First we check if someone scored
+  {
+    int score;
+    if((score = score_ball())){
+      if(score == 5){
+        game_ended = true;
+        if(W.game -> players == 1){
+          int player1_score = get_score(1);
+          if(player1_score == 5){ // Player 1 won
+            end_moment = W.t;
+            W.play_sound(victory_sound);
+          }
+          else{ // Computer won
+            game_ended = true;
+            end_moment = W.t;
+            W.play_sound(failure_sound);
+            if(W.final_shader_integer < 10)
+              W.final_shader_integer = 9;
+            else
+              W.final_shader_integer = 19;
+          }
+        }
+        else{ // One of 2 players won
+          end_moment = W.t;
+          W.play_sound(victory_sound);
+        }
+      }
+      else{ // Someone marked a point, but the game didn't end
+        W.play_sound(ball_miss);
+        reset_ball();
+      }
+    }
+  }
+
+  // Player input
   if(W.keyboard[W_UP] && !game_ended){
     if(W.game -> players == 1)
       move_paddle(paddle1, W_UP, W.keyboard[W_UP], PADDLE_SPEED);
@@ -53,6 +91,12 @@ MAIN_LOOP pong(void){
     else if(W.keyboard[W_S] && !game_ended)
     move_paddle(paddle1, W_DOWN, W.keyboard[W_S], PADDLE_SPEED);
   }
+
+  // Check if ball collided, if not move it:
+  if(!collision_ball()){
+    update_ball();
+  }
+  
  LOOP_END:
   return;
 }

@@ -17,16 +17,27 @@ You should have received a copy of the GNU Affero General Public License
 along with pong. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _title_h_
-#define _title_h_
+#ifndef _ball_h_
+#define _ball_h_
 
-#include "includes.h"
 #include "weaver/weaver.h"
+#include "includes.h"
 
-struct sound *collision1, *collision2, *ball_miss, *revelation,
-  *danger_sound, *restoration, *explosion_sound, *failure_sound,
-  *victory_sound, *coin;
+#define BALL_SHADER 8
 
-MAIN_LOOP title(void);
+#define BALL_WIDTH (W.width/40)
+#define BALL_HEIGHT (W.height/27)
+#define BALL_SPEED ((float) PADDLE_SPEED*((float) W.width / (float) W.height) * \
+                    0.9)
+
+struct interface *ball;
+
+float ball_speed, ball_dx, ball_dy;
+
+void initialize_ball(void);
+int score_ball(void);
+void reset_ball(void);
+bool collision_ball(void);
+void update_ball(void);
 
 #endif
