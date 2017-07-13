@@ -74,25 +74,28 @@ MAIN_LOOP pong(void){
   }
 
   // Player input
-  if(W.keyboard[W_UP] && !game_ended){
+  if(W.keyboard[W_UP] > 0 && !game_ended){
     if(W.game -> players == 1)
       move_paddle(paddle1, W_UP, W.keyboard[W_UP], PADDLE_SPEED);
     else
       move_paddle(paddle2, W_UP, W.keyboard[W_UP], PADDLE_SPEED);
   }
-  else if(W.keyboard[W_DOWN] && !game_ended){
+  else if(W.keyboard[W_DOWN] > 0 && !game_ended){
     if(W.game -> players == 1)
       move_paddle(paddle1, W_DOWN, W.keyboard[W_DOWN], PADDLE_SPEED);
     else
       move_paddle(paddle2, W_DOWN, W.keyboard[W_DOWN], PADDLE_SPEED);
   }
   if(W.game -> players == 2){
-    if(W.keyboard[W_W] && !game_ended)
+    if(W.keyboard[W_W] > 0 && !game_ended)
       move_paddle(paddle1, W_UP, W.keyboard[W_W], PADDLE_SPEED);
-    else if(W.keyboard[W_S] && !game_ended)
+    else if(W.keyboard[W_S] > 0 && !game_ended)
     move_paddle(paddle1, W_DOWN, W.keyboard[W_S], PADDLE_SPEED);
   }
-
+  // Computer AI
+  if(W.game -> players < 2)
+    paddle_ai(2);
+  
   // Check if ball collided, if not move it:
   if(!game_ended){
     if(collision_ball()){

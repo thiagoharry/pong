@@ -311,7 +311,7 @@ if(fragment_source!=NULL)Wfree(fragment_source);
 if(vertex_source!=NULL)Wfree(vertex_source);
 }
 /*:459*//*488:*/
-#line 10799 "cweb/weaver.w"
+#line 10778 "cweb/weaver.w"
 
 char _vertex_interface_texture[]= {
 #include "vertex_interface_texture.data"
@@ -320,7 +320,7 @@ char _fragment_interface_texture[]= {
 #include "fragment_interface_texture.data"
 ,0x00};
 /*:488*//*494:*/
-#line 10977 "cweb/weaver.w"
+#line 10956 "cweb/weaver.w"
 
 void _change_resolution(int resolution_x,int resolution_y){
 int width,height,old_width= W.width,old_height= W.height;
@@ -380,7 +380,7 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 /*:494*//*499:*/
-#line 11065 "cweb/weaver.w"
+#line 11044 "cweb/weaver.w"
 
 void _change_final_shader(int type){
 _use_non_default_render= true;

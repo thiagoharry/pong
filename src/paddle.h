@@ -21,6 +21,7 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #define _paddle_h_
 
 #include "weaver/weaver.h"
+#include "includes.h"
 
 #define PADDLE_SPEED (W.height/40)
 #define PADDLE_WIDTH (W.width/40)
@@ -32,5 +33,6 @@ struct interface *paddle1, *paddle2;
 
 void initialize_paddle(void);
 void move_paddle(struct interface *, int, long, long);
+void paddle_ai(int);
 
 #endif
