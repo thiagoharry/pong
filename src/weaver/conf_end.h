@@ -1,5 +1,5 @@
 /*68:*/
-#line 1935 "cweb/weaver.w"
+#line 1937 "cweb/weaver.w"
 
 #ifndef W_DEBUG_LEVEL
 #define W_DEBUG_LEVEL 0
@@ -17,7 +17,7 @@
 #define W_TARGET W_ELF
 #endif
 /*:68*//*93:*/
-#line 2429 "cweb/weaver.w"
+#line 2431 "cweb/weaver.w"
 
 #ifndef W_MAX_MEMORY
 #warning "W_MAX_MEMORY not defined at conf/conf.h. Assuming the smallest value possible"
@@ -35,7 +35,7 @@
 #define W_MAX_SUBLOOP 1
 #endif
 /*:93*//*209:*/
-#line 4968 "cweb/weaver.w"
+#line 4970 "cweb/weaver.w"
 
 #ifndef W_DEFAULT_COLOR
 #define W_DEFAULT_COLOR 0.0, 0.0, 0.0
@@ -47,7 +47,7 @@
 #define W_WIDTH 0
 #endif
 /*:209*//*325:*/
-#line 7216 "cweb/weaver.w"
+#line 7220 "cweb/weaver.w"
 
 #ifndef W_INSTALL_DATA
 #define W_INSTALL_DATA "/usr/share/games/"W_PROG

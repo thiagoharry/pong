@@ -1,14 +1,14 @@
 /*241:*/
-#line 5511 "cweb/weaver.w"
+#line 5513 "cweb/weaver.w"
 
 /*66:*/
-#line 1911 "cweb/weaver.w"
+#line 1913 "cweb/weaver.w"
 
 #include "conf_begin.h"
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 5512 "cweb/weaver.w"
+#line 5514 "cweb/weaver.w"
 
 extern int make_iso_compilers_happy;
 #if W_TARGET == W_WEB
@@ -60,13 +60,15 @@ el.style.top= "0px";
 el.style.left= "0px";
 el= document.getElementById("output");
 el.style.display= "none";
+el= document.getElementsByTagName("BODY")[0];
+el.style.overflow= "hidden";
 );
 }
 void _finalize_canvas(void){
 SDL_FreeSurface(window);
 }
 /*250:*/
-#line 5695 "cweb/weaver.w"
+#line 5699 "cweb/weaver.w"
 
 void _Wresize_window(int width,int height){
 int old_width,old_height;
@@ -83,11 +85,11 @@ W.width= width;
 W.height= height;
 glViewport(0,0,W.width,W.height);
 /*433:*/
-#line 9466 "cweb/weaver.w"
+#line 9470 "cweb/weaver.w"
 
 _update_interface_screen_size();
 /*:433*//*475:*/
-#line 10521 "cweb/weaver.w"
+#line 10525 "cweb/weaver.w"
 
 {
 
@@ -116,20 +118,20 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 /*:475*/
-#line 5710 "cweb/weaver.w"
+#line 5714 "cweb/weaver.w"
 
 #ifdef W_MULTITHREAD
 pthread_mutex_unlock(&_window_mutex);
 #endif
 }
 /*:250*//*256:*/
-#line 5758 "cweb/weaver.w"
+#line 5762 "cweb/weaver.w"
 
 void _Wmove_window(int width,int height){
 return;
 }
 /*:256*/
-#line 5568 "cweb/weaver.w"
+#line 5572 "cweb/weaver.w"
 
 #endif
 /*:241*/

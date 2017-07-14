@@ -1,5 +1,5 @@
 /*437:*/
-#line 9527 "cweb/weaver.w"
+#line 9531 "cweb/weaver.w"
 
 #include <sys/types.h>  
 #include <sys/stat.h>  
@@ -10,7 +10,7 @@
 #include <fcntl.h>  
 #include "shaders.h"
 /*445:*/
-#line 9628 "cweb/weaver.w"
+#line 9632 "cweb/weaver.w"
 
 char _vertex_interface[]= {
 #include "vertex_interface.data"
@@ -19,7 +19,7 @@ char _fragment_interface[]= {
 #include "fragment_interface.data"
 ,0x00};
 /*:445*//*447:*/
-#line 9646 "cweb/weaver.w"
+#line 9650 "cweb/weaver.w"
 
 GLuint _compile_shader(char*source,bool vertex){
 GLuint shader;
@@ -56,7 +56,7 @@ exit(1);
 return shader;
 }
 /*:447*//*449:*/
-#line 9691 "cweb/weaver.w"
+#line 9695 "cweb/weaver.w"
 
 GLuint _link_and_clean_shaders(GLuint vertex,GLuint fragment){
 GLuint program= glCreateProgram();
@@ -91,7 +91,7 @@ glDetachShader(program,fragment);
 return program;
 }
 /*:449*//*459:*/
-#line 10020 "cweb/weaver.w"
+#line 10024 "cweb/weaver.w"
 
 void _compile_and_insert_new_shader(char*dir,int position){
 char*vertex_file= NULL,*fragment_file= NULL;
@@ -311,7 +311,7 @@ if(fragment_source!=NULL)Wfree(fragment_source);
 if(vertex_source!=NULL)Wfree(vertex_source);
 }
 /*:459*//*488:*/
-#line 10778 "cweb/weaver.w"
+#line 10782 "cweb/weaver.w"
 
 char _vertex_interface_texture[]= {
 #include "vertex_interface_texture.data"
@@ -320,7 +320,7 @@ char _fragment_interface_texture[]= {
 #include "fragment_interface_texture.data"
 ,0x00};
 /*:488*//*494:*/
-#line 10956 "cweb/weaver.w"
+#line 10960 "cweb/weaver.w"
 
 void _change_resolution(int resolution_x,int resolution_y){
 int width,height,old_width= W.width,old_height= W.height;
@@ -380,13 +380,13 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 /*:494*//*499:*/
-#line 11044 "cweb/weaver.w"
+#line 11048 "cweb/weaver.w"
 
 void _change_final_shader(int type){
 _use_non_default_render= true;
 _custom_final_shader= type;
 }
 /*:499*/
-#line 9536 "cweb/weaver.w"
+#line 9540 "cweb/weaver.w"
 
 /*:437*/
