@@ -36,6 +36,7 @@ MAIN_LOOP pong(void){
   initialize_score();
   initialize_item();
   initialize_danger();
+  initialize_bomb();
   if(W.game -> game_completed){
     W.final_shader_integer = 1;
     paddle1 -> integer = 10;
