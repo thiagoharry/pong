@@ -413,19 +413,3 @@ void main(){
   else
     gl_FragData[0] = color;
 }
-
-/*
-(defun converte (str)
-  (interactive "sCódigo Hexadecimal: ")
-  (let ((first (string-to-number (substring str 0 2) 16))
-        (second (string-to-number (substring str 2 4) 16))
-        (third  (string-to-number (substring str 4) 16)))
-    (insert "color = vec4 (")
-    (insert (number-to-string (/ first 255.0)))
-    (insert ", ")
-    (insert (number-to-string (/ second 255.0)))
-    (insert ", ")
-    (insert (number-to-string (/ third 255.0)))
-    (insert ", 1.0);\n")))
-*/
-
