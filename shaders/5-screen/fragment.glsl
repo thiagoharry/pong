@@ -114,10 +114,10 @@ float snoise(vec3 v)
 
 float default3DFbm(vec3 P, float frequency, float lacunarity, int octaves, float addition)
 {
-    float t = 0.0f;
+    float t = 0.0;
     float amplitude = 1.0;
     float amplitudeSum = 0.0;
-    for(int k = 0; k < octaves; ++k)
+    for(int k = 0; k < 10; ++k)
     {
         t += min(snoise(P * frequency)+addition, 1.0) * amplitude;
         amplitudeSum += amplitude;

@@ -22,8 +22,10 @@ varying vec2 position;
 void main( void ) {
   float dist = distance(position, vec2(0.0, 0.0));
   float x_pos, y_pos;
-  for(x_pos = position.x + 0.5; x_pos > 0.0; x_pos -= 0.05);
-  for(y_pos = position.y + 0.5; y_pos > 0.0; y_pos -= 0.02);
+  //for(x_pos = position.x + 0.5; x_pos > 0.0; x_pos -= 0.05);
+  //for(y_pos = position.y + 0.5; y_pos > 0.0; y_pos -= 0.02);
+  x_pos = position.x - 0.05 * float(int((position.x + 0.5) / 0.05));
+  y_pos = position.y - 0.02 * float(int((position.y + 0.5) / 0.02)); 
   if((integer == 1 || integer == 11) &&
      abs(-0.05 - x_pos) > (0.05 * (40.0 / object_size.x))){
     gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);

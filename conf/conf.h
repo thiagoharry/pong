@@ -16,7 +16,7 @@
 // a web program to be run in a browser (W_WEB). In the first case,
 // running "make" creates an executable with the project name. In the
 // second, creates a "web" directory with a web application
-#define W_TARGET W_ELF
+#define W_TARGET W_WEB
 
 // This macro determines if we are writting a C program (W_C) or a C++
 // program (W_CPP):
@@ -27,7 +27,7 @@
 #define W_INTERNAL_MEMORY 32768
 // When compiling for the web, we usually need aditional memory. So we
 // sum the memory above with the value below:
-#define W_WEB_MEMORY 2097152
+#define W_WEB_MEMORY 4097152
 
 // If you wont use multiple threads, you can comment this:
 //#define W_MULTITHREAD
