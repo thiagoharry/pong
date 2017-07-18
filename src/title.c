@@ -23,7 +23,10 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #define START_SHADER   2
 #define EXIT_SHADER    3
 
-static struct interface *pong_title, *p1, *p2, *quit, *cursor;
+static struct interface *pong_title, *p1, *p2, *cursor;
+#if W_TARGET == W_ELF
+static struct interface *quit;
+#endif
 static int menu_selection;
 
 // The title screen is entirely in the screen shader. We just set the
@@ -36,8 +39,10 @@ MAIN_LOOP title(void){
                          200, 25);
   p2 = W.new_interface(START_SHADER, W.width / 2, 200,
                        200, 25);
+#if W_TARGET == W_ELF
   quit = W.new_interface(EXIT_SHADER, W.width / 2, 150,
                          100, 25);
+#endif
   cursor = W.new_interface(W_INTERFACE_PERIMETER,
                            W.width / 2, 250,
                            210, 35,
@@ -68,7 +73,13 @@ MAIN_LOOP title(void){
     }
   }
   else if(W.keyboard[W_DOWN] == 1){
-    if(menu_selection != 2){
+    if(menu_selection !=
+#if W_TARGET == W_ELF
+       2
+#else
+       1
+#endif
+       ){
       W.play_sound(collision2);
       menu_selection ++;
       W.move_interface(cursor, cursor -> x, cursor -> y - 50);
@@ -84,9 +95,11 @@ MAIN_LOOP title(void){
       W.game -> players = 2;
       Wsubloop(pong);
     }
+#if W_TARGET == W_ELF
     else if(menu_selection == 2){
       Wexit_loop();
     }
+#endif
     if(W.game -> game_completed)
       W.final_shader_integer = 1;
   }
