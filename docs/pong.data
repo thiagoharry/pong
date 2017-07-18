@@ -1877,8 +1877,8 @@ void main(){
   }
   else if(integer == 7 || integer == 17){ // Dancing deformation
     vec3 P = vec3(position, time / 5.0);
-    position.x += 0.064 * default3DFbm(P, 2.0, 2.0, 10, 0.9) - 0.04;
-    position.y += 0.064 * default3DFbm(P, 2.0, 2.0, 10, 0.9) - 0.04;
+    position.x += 0.064 * default3DFbm2(P, 2.0, 2.0, 0.9) - 0.04;
+    position.y += 0.064 * default3DFbm2(P, 2.0, 2.0, 0.9) - 0.04;
   }
   if(position.x >= 0.0 && position.x <= 1.0 &&
      position.y >= 0.0 && position.y <= 1.0)
