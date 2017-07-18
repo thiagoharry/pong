@@ -10,7 +10,7 @@
 // 1: Info about non-fatal errors will be printed
 // 2: General warnings will be printed
 // Before installing and distributing this game, set the macro to 0
-#define W_DEBUG_LEVEL 2
+#define W_DEBUG_LEVEL 0
 
 // This macro determines if we are building a native program (W_ELF) or
 // a web program to be run in a browser (W_WEB). In the first case,
@@ -23,11 +23,11 @@
 #define W_SOURCE W_C
 
 // The maximum ammount of memory for the game
-#define W_MAX_MEMORY 100000000
+#define W_MAX_MEMORY 1048576
 #define W_INTERNAL_MEMORY 32768
 // When compiling for the web, we usually need aditional memory. So we
 // sum the memory above with the value below:
-#define W_WEB_MEMORY 4097152
+#define W_WEB_MEMORY 134217728
 
 // If you wont use multiple threads, you can comment this:
 //#define W_MULTITHREAD
