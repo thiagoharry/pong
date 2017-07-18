@@ -156,32 +156,29 @@ void update_ball(void){
       W.play_sound(collision2);
   }
   // Ball collision with item:
-  if(item -> visible){
-    float dst = sqrtf((ball -> x - item -> x) * (ball -> x - item -> x) +
-                      (ball -> y - item -> y) * (ball -> y - item -> y));
-    if(dst < BALL_WIDTH * 1.1){
-      get_item();
-    }
-  }
+  if(item -> visible && collision_ball_object(item))
+    get_item();
   // Ball collision with danger
-  if(danger -> visible){
-    float dst = sqrtf((ball -> x - danger -> x) * (ball -> x - danger -> x) +
-                      (ball -> y - danger -> y) * (ball -> y - danger -> y));
-    if(dst < BALL_WIDTH * 1.1){
-      get_danger();
-      danger -> visible = false;
-    }
-  }
+  if(danger -> visible && collision_ball_object(danger))
+    get_danger();
   // Ball collision with bomb:
-  if(bomb -> visible && !explosion){
-    // Collision detection with bomb must be perfect. The bomb is
-    // difficult to hit, so it's not fair to not detect when someone
-    // hits it.
-    float tmp = (bomb -> x - ball -> x) / ball_dx;
-    float pos_y = ball -> y + tmp * ball_dy;
-    if(pos_y - bomb -> y < (bomb -> height + ball -> height) / 2 &&
-       pos_y - bomb -> y > - (bomb -> height + ball -> height) / 2){
-      blow_up_bomb();
-    }
+  if(bomb -> visible && !explosion && collision_ball_object(bomb))
+    blow_up_bomb();
+}
+
+// Given a square object represented by an interface, the ball collides with it?
+bool collision_ball_object(struct interface *obj){
+  float tmp = (obj -> x - ball -> x) / ball_dx;
+  float pos_y;
+  if(tmp < 0.0 || tmp > ball_dx * ball_speed){
+    // Ball isn't going in object direction or is too far away
+    return false;
   }
+  // pos_y is where the ball will be in y-axis when it arrives in the
+  // same x position than the object
+  pos_y = ball -> y + tmp * ball_dy;
+  if(pos_y - obj -> y < (obj -> height + ball -> height) / 2 &&
+     pos_y - obj -> y > - (obj -> height + ball -> height) / 2)
+    return true;
+  return false;
 }

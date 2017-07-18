@@ -117,7 +117,22 @@ float default3DFbm(vec3 P, float frequency, float lacunarity, int octaves, float
     float t = 0.0;
     float amplitude = 1.0;
     float amplitudeSum = 0.0;
-    for(int k = 0; k < 10; ++k)
+    for(int k = 0; k < 5; ++k)
+    {
+        t += min(snoise(P * frequency)+addition, 1.0) * amplitude;
+        amplitudeSum += amplitude;
+        amplitude *= 0.5;
+        frequency *= lacunarity;
+    }
+    return t/amplitudeSum;
+}
+
+float default3DFbm2(vec3 P, float frequency, float lacunarity,  float addition)
+{
+    float t = 0.0;
+    float amplitude = 1.0;
+    float amplitudeSum = 0.0;
+    for(int k = 0; k < 2; ++k)
     {
         t += min(snoise(P * frequency)+addition, 1.0) * amplitude;
         amplitudeSum += amplitude;
@@ -180,7 +195,11 @@ void main(){
     position.x += 0.064 * default3DFbm(P, 2.0, 2.0, 10, 0.9) - 0.04;
     position.y += 0.064 * default3DFbm(P, 2.0, 2.0, 10, 0.9) - 0.04;
   }
-  color = texture2D(texture1, position);
+  if(position.x >= 0.0 && position.x <= 1.0 &&
+     position.y >= 0.0 && position.y <= 1.0)
+    color = texture2D(texture1, position);
+  else
+    color = vec4(0.0, 0.0, 0.0, 0.0);
   if(integer >= 10 && vec3(color) == vec3(0.0, 0.0, 0.0)){
     vec2 surfacePosition = position;
     vec2 uv = surfacePosition;
@@ -232,7 +251,7 @@ void main(){
     vec2 g = position * object_size * 1.5;
     float d = 15.;
     vec2 p = g /= object_size.y / d, ac,al;
-    float adjust = default3DFbm(vec3(position, time), 2.0, 2.0, 10, 0.9);
+    float adjust = default3DFbm2(vec3(position, time), 2.0, 2.0, 0.9);
     //vec3 adjust = nrand3(position);
     for(int x=-1;x<=1;x++)
       for(int y=-1;y<=1;y++){

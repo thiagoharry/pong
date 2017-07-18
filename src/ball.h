@@ -39,5 +39,6 @@ int score_ball(void);
 void reset_ball(void);
 bool collision_ball(void);
 void update_ball(void);
+bool collision_ball_object(struct interface *);
 
 #endif

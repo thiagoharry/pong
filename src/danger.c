@@ -54,6 +54,7 @@ void get_danger(void){
     else
       W.resize_interface(paddle2, paddle2 -> width, 0.5 * paddle2 -> height);
   }
+  danger -> visible = false;
 }
 
 void end_danger(void){

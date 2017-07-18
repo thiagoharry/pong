@@ -48,6 +48,7 @@ MAIN_LOOP pong(void){
   else{
     W.final_shader_integer = 0;
   }
+  W.final_shader_integer = 0;
   
  LOOP_BODY:
   if(W.keyboard[W_ESC])
@@ -113,7 +114,7 @@ MAIN_LOOP pong(void){
   // Check if ball collided, if not move it:
   ball_old_x = ball -> x;
   if(!game_ended){
-    if(collision_ball() && !explosion){
+    if(!explosion && collision_ball()){
       if(beginning_of_game && ball_dy != 0.0)
         beginning_of_game = false;
       // Check if we need to hide item
