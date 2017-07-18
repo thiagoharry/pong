@@ -25,7 +25,7 @@ void initialize_bomb(void){
                          W.random() % W.height,
                          BALL_WIDTH / 2, BALL_WIDTH / 2,
                          1.0, 1.0, 1.0, 1.0);
-  bomb -> visible = true;
+  bomb -> visible = false;
   explosion = false;
 }
 
@@ -51,7 +51,7 @@ void blow_up_bomb(void){
   W.play_sound(explosion_sound);
   previous_screen = W.final_shader_integer;
   W.final_shader_integer = 20;
-  W.run_futurelly(restore_screen_after_explosion, 0.2);
+  W.run_futurelly(restore_screen_after_explosion, 0.1);
 }
 
 void restore_screen_after_explosion(void){

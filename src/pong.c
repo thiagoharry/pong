@@ -48,7 +48,6 @@ MAIN_LOOP pong(void){
   else{
     W.final_shader_integer = 0;
   }
-  
  LOOP_BODY:
   if(W.keyboard[W_ESC])
     Wexit_loop();
@@ -202,8 +201,14 @@ MAIN_LOOP pong(void){
       pad = paddle2;
     else
       pad = paddle1;
-    W.resize_interface(bomb, bomb -> width *= 1.1, bomb -> height *= 1.1);
-    W.resize_interface(pad, pad -> width *= 1.15, pad -> height *= 1.1);
+    if(bomb -> width < 10.0 * BALL_WIDTH)
+      W.resize_interface(bomb, bomb -> width *= 1.2, bomb -> height *= 1.2);
+    else
+      bomb -> visible = false;
+    if(pad -> width < 20.0 * PADDLE_WIDTH)
+      W.resize_interface(pad, pad -> width *= 1.2, pad -> height *= 1.1);
+    else
+      pad -> visible = false;
     if(pad -> integer == 0)
       pad -> integer = 1;
     else if(pad  -> integer == 10)

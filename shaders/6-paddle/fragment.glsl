@@ -21,18 +21,20 @@ varying vec2 position;
 
 void main( void ) {
   float dist = distance(position, vec2(0.0, 0.0));
-  float x_pos, y_pos;
-  //for(x_pos = position.x + 0.5; x_pos > 0.0; x_pos -= 0.05);
-  //for(y_pos = position.y + 0.5; y_pos > 0.0; y_pos -= 0.02);
-  x_pos = position.x - 0.05 * float(int((position.x + 0.5) / 0.05));
-  y_pos = position.y - 0.02 * float(int((position.y + 0.5) / 0.02)); 
-  if((integer == 1 || integer == 11) &&
-     abs(-0.05 - x_pos) > (0.05 * (40.0 / object_size.x))){
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+  int draw = 0, p = 0;
+  vec4 color;
+  if((integer == 1 || integer == 11) && dist > 0.5){
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
   }
-  else if((integer == 1 || integer == 11) &&
-          abs(-0.02 - y_pos) > (0.05 * (80.0 / object_size.y))){
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+  else if(integer == 1 || integer == 11){
+    for(float x = -0.5; x < 0.5 ; x += 0.05)
+      for(float y = -0.5; y < 0.5; y += 0.05)
+        if(distance(vec2(float(x), float(y)), position) <=
+           1.0/object_size.x)
+          draw = 1;
+  }
+  if((integer == 1 || integer == 11) && draw == 0){
+    gl_FragColor= vec4(0.0, 0.0, 0.0, 0.0);
   }
   else if(integer < 10)
     gl_FragColor =  vec4(1.0, 1.0, 1.0, 1.0);

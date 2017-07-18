@@ -21,18 +21,19 @@ uniform sampler2D texture1;
 varying vec2 position;
 
 void main(){
+  float dst;
   vec4 color;
   vec2 fuse = vec2(0.8, 0.725);
-  float dst, x_pos, y_pos;
-  x_pos = position.x - 0.05 * float(int((position.x + 0.5) / 0.05));
-  y_pos = position.y - 0.02 * float(int((position.y + 0.5) / 0.02)); 
-  /*if(abs(-0.05 - x_pos) > (0.05 * (20.0 / object_size.x))){
+  int draw = 0, p = 0;
+  for(float x = 0.0; x < 1.0; x += 0.05)
+    for(float y = 0.0; y < 1.0 ; y += 0.05)
+      if(distance(vec2(float(x), float(y)), position) <=
+         1.0/object_size.x)
+        draw = 1;
+  if(draw == 0){
     color = vec4(0.0, 0.0, 0.0, 0.0);
   }
-  else if(abs(-0.05 - y_pos) > (0.05 * (20.0 / object_size.y))){
-    color = vec4(0.0, 0.0, 0.0, 0.0);
-    }
-    else*/ if(position.y > 0.9){ //linha 1 e 2
+  else if(position.y > 0.9){ //linha 1 e 2
     color  = vec4(0.0, 0.0, 0.0, 0.0);
   }
   else if(position.y > 0.85){ // Linha 3
