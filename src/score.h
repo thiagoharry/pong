@@ -23,7 +23,7 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #include "weaver/weaver.h"
 #include "includes.h"
 
-#define SCORE_SHADER 7
+#define SCORE_SHADER 8
 
 struct interface *score1, *score2;
 

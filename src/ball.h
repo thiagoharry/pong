@@ -23,7 +23,7 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #include "weaver/weaver.h"
 #include "includes.h"
 
-#define BALL_SHADER 8
+#define BALL_SHADER 7
 
 #define BALL_WIDTH (W.width/40)
 #define BALL_HEIGHT (W.height/27)

@@ -32,8 +32,8 @@ MAIN_LOOP pong(void){
   in_danger = false;
   number_of_items = 0;
   initialize_paddle();
-  initialize_ball();
   initialize_score();
+  initialize_ball();
   initialize_item();
   initialize_danger();
   initialize_bomb();
@@ -48,7 +48,6 @@ MAIN_LOOP pong(void){
   else{
     W.final_shader_integer = 0;
   }
-  W.final_shader_integer = 0;
   
  LOOP_BODY:
   if(W.keyboard[W_ESC])
@@ -64,12 +63,14 @@ MAIN_LOOP pong(void){
           int player1_score = get_score(1);
           if(player1_score == 5){ // Player 1 won
             end_moment = W.t;
+            W.move_interface(ball, W.width, ball -> y);
             W.play_sound(victory_sound);
           }
           else{ // Computer won
             game_ended = true;
             end_moment = W.t;
             W.play_sound(failure_sound);
+            W.move_interface(ball, 0.0, ball -> y);
             if(W.final_shader_integer < 10)
               W.final_shader_integer = 9;
             else
@@ -78,6 +79,10 @@ MAIN_LOOP pong(void){
         }
         else{ // One of 2 players won
           end_moment = W.t;
+          if(ball -> x > W.width / 2)
+            W.move_interface(ball, W.width, ball -> y);
+          else
+            W.move_interface(ball, 0.0, ball -> y);
           W.play_sound(victory_sound);
         }
       }
@@ -208,8 +213,11 @@ MAIN_LOOP pong(void){
   if(game_ended &&
      ((!explosion && W.t - end_moment > 3000000) ||
       (W.t - end_moment > 6000000))){
-    if(number_of_items == 6 && W.game -> players == 1)
+    if(number_of_items == 6 && W.game -> players == 1){
       W.game -> game_completed = true;
+    }
+    else
+      W.final_shader_integer = 0;
     Wexit_loop();
   }
 

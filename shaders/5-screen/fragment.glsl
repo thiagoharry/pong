@@ -188,7 +188,8 @@ void main(){
     position = position + vec2(0.03 * sin(time * 3.0), 0.03 * cos(time * 4.0));
   }
   else if(integer == 5 || integer == 15){ // Ondulating screen
-    position.y = position.y + 0.3*sin(time)*sin(time * 0.125 * position.x + 0.15) ;
+    position.y = position.y + 0.25 * sin(sin(time) * 0.5 *
+                                                (4.0 * position.x - 2.0));
   }
   else if(integer == 7 || integer == 17){ // Dancing deformation
     vec3 P = vec3(position, time / 5.0);

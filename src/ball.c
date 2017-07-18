@@ -86,9 +86,11 @@ void reset_ball(void){
 bool collision_ball(void){
   bool ret = false;
   // Testing collision with paddle 2:
-  if(ball_dx > 0 && ball -> x + 0.5 * BALL_WIDTH > W.width - PADDLE_WIDTH &&
-     ball -> y < paddle2 -> y + 0.5 * (paddle2 -> height + BALL_HEIGHT) &&
-     ball -> y > paddle2 -> y - 0.5 * (paddle2 -> height + BALL_HEIGHT)){
+  if(ball_dx > 0 &&
+     ball -> x + ball_dx * ball_speed + ball -> width / 2 >= W.width -
+     PADDLE_WIDTH &&
+     ball -> y + 0.5 * BALL_HEIGHT > paddle2 -> y - 0.5 * paddle2 -> height &&
+     ball -> y - 0.5 * BALL_HEIGHT < paddle2 -> y + 0.5 * paddle2 -> height){
     float angle = 0.25 * M_PI * ((ball -> y - paddle2 -> y) /
                                  (paddle2 -> height + BALL_HEIGHT));
     W.move_interface(ball, W.width - PADDLE_WIDTH - 0.5 * BALL_WIDTH, ball -> y);
@@ -101,9 +103,10 @@ bool collision_ball(void){
     ret = true;
   }
   // Testing collision with paddle 1:
-  else if(ball_dx < 0 && ball -> x - 0.5 * BALL_WIDTH < PADDLE_WIDTH &&
-          ball -> y < paddle1 -> y + 0.5 * (paddle1 -> height + BALL_HEIGHT) &&
-          ball -> y > paddle1 -> y - 0.5 * (paddle1 -> height + BALL_HEIGHT)){
+  else if(ball_dx < 0 &&
+          ball -> x + ball_dx * ball_speed < PADDLE_WIDTH &&
+          ball -> y + 0.5 * BALL_HEIGHT > paddle1 -> y - 0.5 * paddle1 -> height &&
+          ball -> y - 0.5 * BALL_HEIGHT < paddle1 -> y + 0.5 * paddle1 -> height){
     float angle = 0.25 * M_PI * ((ball -> y - paddle1 -> y) /
                                  (paddle1 -> height + BALL_HEIGHT));
     W.move_interface(ball, PADDLE_WIDTH + 0.5* BALL_WIDTH, ball -> y);
@@ -170,6 +173,7 @@ void update_ball(void){
 bool collision_ball_object(struct interface *obj){
   float tmp = (obj -> x - ball -> x) / ball_dx;
   float pos_y;
+  float tolerance = 2.0;
   if(tmp < 0.0 || tmp > ball_dx * ball_speed){
     // Ball isn't going in object direction or is too far away
     return false;
@@ -177,8 +181,8 @@ bool collision_ball_object(struct interface *obj){
   // pos_y is where the ball will be in y-axis when it arrives in the
   // same x position than the object
   pos_y = ball -> y + tmp * ball_dy;
-  if(pos_y - obj -> y < (obj -> height + ball -> height) / 2 &&
-     pos_y - obj -> y > - (obj -> height + ball -> height) / 2)
+  if(pos_y - obj -> y - tolerance < (obj -> height + ball -> height) / 2 &&
+     pos_y - obj -> y + tolerance > - (obj -> height + ball -> height) / 2)
     return true;
   return false;
 }
