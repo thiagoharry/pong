@@ -26,13 +26,13 @@ void main(){
   float dst, x_pos, y_pos;
   x_pos = position.x - 0.05 * float(int((position.x + 0.5) / 0.05));
   y_pos = position.y - 0.02 * float(int((position.y + 0.5) / 0.02)); 
-  if(abs(-0.05 - x_pos) > (0.05 * (20.0 / object_size.x))){
+  /*if(abs(-0.05 - x_pos) > (0.05 * (20.0 / object_size.x))){
     color = vec4(0.0, 0.0, 0.0, 0.0);
   }
   else if(abs(-0.05 - y_pos) > (0.05 * (20.0 / object_size.y))){
     color = vec4(0.0, 0.0, 0.0, 0.0);
-  }
-  else if(position.y > 0.9){ //linha 1 e 2
+    }
+    else*/ if(position.y > 0.9){ //linha 1 e 2
     color  = vec4(0.0, 0.0, 0.0, 0.0);
   }
   else if(position.y > 0.85){ // Linha 3

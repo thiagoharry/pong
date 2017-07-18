@@ -172,4 +172,16 @@ void update_ball(void){
       danger -> visible = false;
     }
   }
+  // Ball collision with bomb:
+  if(bomb -> visible && !explosion){
+    // Collision detection with bomb must be perfect. The bomb is
+    // difficult to hit, so it's not fair to not detect when someone
+    // hits it.
+    float tmp = (bomb -> x - ball -> x) / ball_dx;
+    float pos_y = ball -> y + tmp * ball_dy;
+    if(pos_y - bomb -> y < (bomb -> height + ball -> height) / 2 &&
+       pos_y - bomb -> y > - (bomb -> height + ball -> height) / 2){
+      blow_up_bomb();
+    }
+  }
 }

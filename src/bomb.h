@@ -25,6 +25,15 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 
 #define BOMB_SHADER 11
 
+struct interface *bomb;
+
+bool explosion;
+int previous_screen;
+
 void initialize_bomb(void);
+void hide_bomb(void);
+void show_bomb(void);
+void blow_up_bomb(void);
+void restore_screen_after_explosion(void);
 
 #endif

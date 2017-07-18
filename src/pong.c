@@ -113,7 +113,7 @@ MAIN_LOOP pong(void){
   // Check if ball collided, if not move it:
   ball_old_x = ball -> x;
   if(!game_ended){
-    if(collision_ball()){
+    if(collision_ball() && !explosion){
       if(beginning_of_game && ball_dy != 0.0)
         beginning_of_game = false;
       // Check if we need to hide item
@@ -132,6 +132,13 @@ MAIN_LOOP pong(void){
       else if(danger -> visible && ball -> x < W.width / 2 &&
               danger -> x < W.width / 2)
         hide_danger();
+      // Check if we need to hide bomb:
+      if(bomb -> visible && ball -> x > W.width / 2 &&
+         bomb -> x > W.width / 2)
+        hide_bomb();
+      else if(bomb -> visible && ball -> x < W.width / 2 &&
+              bomb -> x < W.width / 2)
+        hide_bomb();
     }
     else{
       update_ball();
@@ -150,6 +157,10 @@ MAIN_LOOP pong(void){
         if(!beginning_of_game && !(danger -> visible) && !in_danger){
           if(W.random() % 5 < 2)
             show_danger(); // Regenerate danger
+        }
+        if(get_score(1) == 4 && !(bomb -> visible) && !in_danger){
+          if(W.random() % 5 == 0)
+            show_bomb();
         }
       }
     }
@@ -178,10 +189,25 @@ MAIN_LOOP pong(void){
     end_danger();
     in_danger = false;
   }
-
+  // Handling explosion:
+  if(explosion && bomb -> visible){
+    struct interface *pad;
+    if(bomb -> x > W.width / 2)
+      pad = paddle2;
+    else
+      pad = paddle1;
+    W.resize_interface(bomb, bomb -> width *= 1.1, bomb -> height *= 1.1);
+    W.resize_interface(pad, pad -> width *= 1.15, pad -> height *= 1.1);
+    if(pad -> integer == 0)
+      pad -> integer = 1;
+    else if(pad  -> integer == 10)
+      pad -> integer = 11;
+  }
   // Checking for end of game:
-  if(game_ended && ((W.t - end_moment > 3000000))){
-    if(number_of_items == 6)
+  if(game_ended &&
+     ((!explosion && W.t - end_moment > 3000000) ||
+      (W.t - end_moment > 6000000))){
+    if(number_of_items == 6 && W.game -> players == 1)
       W.game -> game_completed = true;
     Wexit_loop();
   }
