@@ -10,7 +10,7 @@
 // 1: Info about non-fatal errors will be printed
 // 2: General warnings will be printed
 // Before installing and distributing this game, set the macro to 0
-#define W_DEBUG_LEVEL 1
+#define W_DEBUG_LEVEL 0
 
 // This macro determines if we are building a native program (W_ELF) or
 // a web program to be run in a browser (W_WEB). In the first case,

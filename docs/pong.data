@@ -555,3 +555,1408 @@ void main(){
   coordinate = vec2(vertex_position[0] + 0.5, vertex_position[1] + 0.5);
   gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
 }
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+uniform vec4 object_color;
+
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+uniform sampler2D texture1;
+
+varying mediump vec2 coordinate;
+
+#define RAY_STEPS 60
+#define SHADOW_STEPS 12
+#define LIGHT_COLOR vec3(.85,.9,1.)
+#define AMBIENT_COLOR vec3(.3,.9,1.)
+#define FLOOR_COLOR vec3(1.,.7,.9)
+#define ENERGY_COLOR vec3(1.,.7,.4)
+#define BRIGHTNESS .9
+#define GAMMA 2.1
+#define SATURATION .9
+
+#define detail .00005
+#define t time
+
+vec3 lightdir=normalize(vec3(0.8,-0.3,-1.));
+vec3 ambdir=normalize(vec3(0.,0.,1.));
+const vec3 origin=vec3(0.,3.11,0.);
+vec3 energy=vec3(0.01);
+float vibration=0.;
+float det=0.0;
+vec3 pth1;
+
+float fnoo() {
+  return sin(time) * 0.5 + 0.5;
+}
+
+vec2 de(vec3 pos) {
+  float hid=0.;
+  vec3 tpos=pos;
+  tpos.xz=abs(.5-mod(tpos.xz,1.));
+  vec4 p=vec4(tpos,1.);
+  float y=max(0.,.35-abs(pos.y-3.35))/.35;
+  for (int i=0; i<7; i++) {//LOWERED THE ITERS
+    p.xyz = abs(p.xyz)-vec3(-0.02,1.98,-0.02);
+    p=p*(2.0+vibration*y)/clamp(dot(p.xyz,p.xyz),.4,1.)-vec4(0.5,1.,0.4,0.);
+    p.xz*=mat2(-0.416*fnoo(),-0.91,0.91,-0.416*fnoo());
+  }
+  float fl=pos.y-3.013;
+  float fr=(length(max(abs(p.xyz)-vec3(0.1,5.0,0.1),vec3(0.0)))-0.05)/p.w;//RETURN A RRECT
+  //float fr=length(p.xyz)/p.w;
+  float d=min(fl,fr);
+  d=min(d,-pos.y+3.95);
+  if (abs(d-fl)<.001) hid=1.;
+  return vec2(d,hid);
+}
+
+
+float calcAO( const vec3 pos, const vec3 nor ) {
+  float aodet=detail*40.;
+  float totao = 0.0;
+  float sca = 14.0;
+  for( int aoi=0; aoi<5; aoi++ ) {
+    float hr = aodet*float(aoi*aoi);
+    vec3 aopos =  nor * hr + pos;
+    float dd = de( aopos ).x;
+    totao += -(dd-hr)*sca;
+    sca *= 0.7;
+  }
+  return clamp( 1.0 - 5.0*totao, 0., 1.0 );
+}
+
+vec3 path(float ti){
+  return vec3(sin(ti),.3-sin(ti*.632)*.3,cos(ti*.5))*.5;
+}
+
+mat2 rot(float a) {
+  return mat2(cos(a),sin(a),-sin(a),cos(a));	
+}
+
+
+
+vec3 normal(vec3 p) {
+  vec3 e = vec3(0.0,det,0.0);
+  
+  return normalize(vec3(
+			de(p+e.yxx).x-de(p-e.yxx).x,
+			de(p+e.xyx).x-de(p-e.xyx).x,
+			de(p+e.xxy).x-de(p-e.xxy).x
+			)
+                   );	
+}
+
+float Sphere(vec3 p, vec3 rd, float r){//A RAY TRACED SPHERE
+  float b = dot( -p, rd );
+  float inner = b * b - dot( p, p ) + r * r;
+  if( inner < 0.0 ) return -1.0;
+  return b - sqrt( inner );
+}
+
+
+
+float texture(vec3 p) {
+  p=abs(.5-fract(p*10.));
+  vec3 c=vec3(3.);
+  float es, l=es=0.;
+  for (int i = 0; i < 10; i++) { 
+    p = abs(p + c) - abs(p - c) - p; 
+    p/= clamp(dot(p, p), .0, 1.);
+    p = p* -1.5 + c;
+    if ( mod(float(i), 2.) < 1. ) { 
+      float pl = l;
+      l = length(p);
+      es+= exp(-1. / abs(l - pl));
+    }
+  }
+  return es;
+}
+
+vec3 light(in vec3 p, in vec3 dir, in vec3 n, in float hid) {//PASSING IN THE NORMAL
+#ifdef ENABLE_HARD_SHADOWS
+  float sh=shadow(p, lightdir);
+#else
+  float sh=calcAO(p,-2.5*lightdir);//USING AO TO MAKE VERY SOFT SHADOWS
+#endif
+  float ao=calcAO(p,n);
+  float diff=max(0.,dot(lightdir,-n))*sh;
+  float y=3.35-p.y;
+  vec3 amb=max(.5,dot(dir,-n))*.5*AMBIENT_COLOR;
+  if (hid<.5) {
+    amb+=max(0.2,dot(vec3(0.,1.,0.),-n))*FLOOR_COLOR*pow(max(0.,.2-abs(3.-p.y))/.2,1.5)*2.;
+    amb+=energy*pow(max(0.,.4-abs(y))/.4,2.)*max(0.2,dot(vec3(0.,-sign(y),0.),-n))*2.;
+  }
+  vec3 r = reflect(lightdir,n);
+  float spec=pow(max(0.,dot(dir,-r))*sh,10.);
+  vec3 col;
+  float energysource=pow(max(0.,.04-abs(y))/.04,4.)*2.;
+  if (hid>1.5) {col=vec3(1.); spec=spec*spec;}
+  else{
+    float k=texture(p)*.23+.2; 
+    k=min(k,1.5-energysource);
+    col=mix(vec3(k,k*k,k*k*k),vec3(k),.3);
+    if (abs(hid-1.)<.001) col*=FLOOR_COLOR*1.3;
+  }
+  col=col*(amb+diff*LIGHT_COLOR)+spec*LIGHT_COLOR;	
+  if (hid<.5) { 
+    col=max(col,energy*2.*energysource);
+  }
+  col*=min(1.,ao+length(energy)*.5*max(0.,.1-abs(y))/.1);
+  return col;
+}
+
+vec3 raymarch(in vec3 from, in vec3 dir){
+  float ey=mod(t*.5,1.);
+  float glow,eglow,ref,sphdist,totdist=glow=eglow=ref=sphdist=0.;
+  vec2 d=vec2(1.,0.);
+  vec3 p, col=vec3(0.);
+  vec3 origdir=dir,origfrom=from,sphNorm;
+	
+  //FAKING THE SQUISHY BALL BY MOVING A RAY TRACED BALL
+  vec3 wob=cos(dir*500.0*length(from-pth1)+(from-pth1)*250.+time*10.)*0.0005;
+  float t1=Sphere(from-pth1+wob,dir,0.015);
+  float tg=Sphere(from-pth1+wob,dir,0.02);
+  if(t1>0.){
+    ref=1.0;from+=t1*dir;sphdist=t1;
+    sphNorm=normalize(from-pth1+wob);
+    dir=reflect(dir,sphNorm);
+  } 
+  else if (tg>0.) { 
+    vec3 sphglowNorm=normalize(from+tg*dir-pth1+wob);
+    glow+=pow(max(0.,dot(sphglowNorm,-dir)),5.);
+  };
+  
+  for (int i=0; i<RAY_STEPS; i++) {
+    if (d.x>det && totdist<3.0) {
+      p=from+totdist*dir;
+      d=de(p);
+      det=detail*(1.+totdist*60.)*(1.+ref*5.);
+      totdist+=d.x; 
+      energy=ENERGY_COLOR*(1.5+sin(time*20.+p.z*10.))*.25;
+      if(d.x<0.015)glow+=max(0.,.015-d.x)*exp(-totdist);
+      if (d.y<.5 && d.x<0.03){//ONLY DOING THE GLOW WHEN IT IS CLOSE ENOUGH
+        float glw=min(abs(3.35-p.y-ey),abs(3.35-p.y+ey));//2 glows at once
+        eglow+=max(0.,.03-d.x)/.03*
+          (pow(max(0.,.05-glw)/.05,5.)
+           +pow(max(0.,.15-abs(3.35-p.y))/.15,8.))*1.5;
+      }
+    }
+  }
+  float l=pow(max(0.,dot(normalize(-dir.xz),normalize(lightdir.xz))),2.);
+  l*=max(0.2,dot(-dir,lightdir));
+  vec3 backg=.5*(1.2-l)+LIGHT_COLOR*l*.7;
+  backg*=AMBIENT_COLOR;
+  if (d.x<=det) {
+    vec3 norm=normal(p-abs(d.x-det)*dir);//DO THE NORMAL CALC OUTSIDE OF LIGHTING (since we already have the sphere normal)
+    col=light(p-abs(d.x-det)*dir, dir, norm, d.y)*exp(-.2*totdist*totdist); 
+    col = mix(col, backg, 1.0-exp(-1.*pow(totdist,1.5)));
+  } else { 
+    col=backg;
+  }
+  vec3 lglow=LIGHT_COLOR*pow(l,30.)*.5;
+  col+=glow*(backg+lglow)*1.3;
+  col+=pow(eglow,2.)*energy*.015;
+  col+=lglow*min(1.,totdist*totdist*.3);
+  if (ref>0.5) {
+    vec3 sphlight=light(origfrom+sphdist*origdir,origdir,sphNorm,2.);
+    col=mix(col*.3+sphlight*.7,backg,1.0-exp(-1.*pow(sphdist,1.5)));
+  }
+  return col; 
+}
+
+vec3 move(inout mat2 rotview1,inout mat2 rotview2) {
+  vec3 go=path(t);
+  vec3 adv=path(t+.7);
+  vec3 advec=normalize(adv-go);
+  float an=atan(advec.x,advec.z);
+  rotview1=mat2(cos(an),sin(an),-sin(an),cos(an));
+  an=advec.y*1.7;
+  rotview2=mat2(cos(an),sin(an),-sin(an),cos(an));
+  return go;
+}
+
+void main(){
+  vec4 color;
+  pth1 = path(t+.3)+origin+vec3(0.,.01,0.);
+  vec2 uv = coordinate * 2.0 -1.0;
+  vec2 uv2=uv;
+  uv.y*=object_size.y/object_size.x;
+  mat2 rotview1, rotview2;
+  vec3 from=origin+move(rotview1,rotview2);
+  vec3 dir=normalize(vec3(uv*.8,1.));
+  dir.yz*=rot(0.0);
+  dir.xz*=rot(0.0);
+  dir.yz*=rotview2;
+  dir.xz*=rotview1;
+  color = texture2D(texture1, coordinate);
+  if(color.r == 0.0 && integer == 1){
+    color=vec4(raymarch(from,dir), 1.0);
+    color=clamp(color,vec4(.0),vec4(1.));
+    color=pow(color,vec4(GAMMA))*BRIGHTNESS;
+    color=mix(vec4(length(color)),color,SATURATION);
+  }
+  gl_FragData[0] = color;
+}
+ 
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+
+attribute vec3 vertex_position;
+
+uniform vec4 object_color;
+uniform mat4 model_view_matrix;
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+varying mediump vec2 coordinate;
+
+void main(){
+  coordinate = vec2(0.5 + vertex_position.x, 0.5 + vertex_position.y);
+  gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
+}
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+uniform vec4 object_color;
+
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+varying mediump vec2 coordinate;
+
+uniform sampler2D texture1;
+
+vec3 mod289(vec3 x) {
+  return x - floor(x * (1.0 / 289.0)) * 289.0;
+}
+
+vec4 mod289(vec4 x) {
+  return x - floor(x * (1.0 / 289.0)) * 289.0;
+}
+
+vec4 permute(vec4 x) {
+     return mod289(((x*34.0)+1.0)*x);
+}
+
+vec4 taylorInvSqrt(vec4 r)
+{
+  return 1.79284291400159 - 0.85373472095314 * r;
+}
+
+float snoise(vec3 v)
+  { 
+  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+  const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+
+// First corner
+  vec3 i  = floor(v + dot(v, C.yyy) );
+  vec3 x0 =   v - i + dot(i, C.xxx) ;
+
+// Other corners
+  vec3 g = step(x0.yzx, x0.xyz);
+  vec3 l = 1.0 - g;
+  vec3 i1 = min( g.xyz, l.zxy );
+  vec3 i2 = max( g.xyz, l.zxy );
+
+  //   x0 = x0 - 0.0 + 0.0 * C.xxx;
+  //   x1 = x0 - i1  + 1.0 * C.xxx;
+  //   x2 = x0 - i2  + 2.0 * C.xxx;
+  //   x3 = x0 - 1.0 + 3.0 * C.xxx;
+  vec3 x1 = x0 - i1 + C.xxx;
+  vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y
+  vec3 x3 = x0 - D.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y
+
+// Permutations
+  i = mod289(i); 
+  vec4 p = permute( permute( permute( 
+             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+           + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+
+// Gradients: 7x7 points over a square, mapped onto an octahedron.
+// The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)
+  float n_ = 0.142857142857; // 1.0/7.0
+  vec3  ns = n_ * D.wyz - D.xzx;
+
+  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  //  mod(p,7*7)
+
+  vec4 x_ = floor(j * ns.z);
+  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
+
+  vec4 x = x_ *ns.x + ns.yyyy;
+  vec4 y = y_ *ns.x + ns.yyyy;
+  vec4 h = 1.0 - abs(x) - abs(y);
+
+  vec4 b0 = vec4( x.xy, y.xy );
+  vec4 b1 = vec4( x.zw, y.zw );
+
+  //vec4 s0 = vec4(lessThan(b0,0.0))*2.0 - 1.0;
+  //vec4 s1 = vec4(lessThan(b1,0.0))*2.0 - 1.0;
+  vec4 s0 = floor(b0)*2.0 + 1.0;
+  vec4 s1 = floor(b1)*2.0 + 1.0;
+  vec4 sh = -step(h, vec4(0.0));
+
+  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+
+  vec3 p0 = vec3(a0.xy,h.x);
+  vec3 p1 = vec3(a0.zw,h.y);
+  vec3 p2 = vec3(a1.xy,h.z);
+  vec3 p3 = vec3(a1.zw,h.w);
+
+//Normalise gradients
+  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+  p0 *= norm.x;
+  p1 *= norm.y;
+  p2 *= norm.z;
+  p3 *= norm.w;
+
+// Mix final noise value
+  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+  m = m * m;
+  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
+                                dot(p2,x2), dot(p3,x3) ) );
+  }
+
+float default3DFbm(vec3 P, float frequency, float lacunarity, int octaves, float addition)
+{
+    float t = 0.0;
+    float amplitude = 1.0;
+    float amplitudeSum = 0.0;
+    for(int k = 0; k < 5; ++k)
+    {
+        t += min(snoise(P * frequency)+addition, 1.0) * amplitude;
+        amplitudeSum += amplitude;
+        amplitude *= 0.5;
+        frequency *= lacunarity;
+    }
+    return t/amplitudeSum;
+}
+
+float default3DFbm2(vec3 P, float frequency, float lacunarity,  float addition)
+{
+    float t = 0.0;
+    float amplitude = 1.0;
+    float amplitudeSum = 0.0;
+    for(int k = 0; k < 2; ++k)
+    {
+        t += min(snoise(P * frequency)+addition, 1.0) * amplitude;
+        amplitudeSum += amplitude;
+        amplitude *= 0.5;
+        frequency *= lacunarity;
+    }
+    return t/amplitudeSum;
+}
+
+
+
+float field(in vec3 p,float s,  int idx) {
+   float strength = 7. + .03 * log(1.e-6 + fract(sin(time) * 4373.11));
+   float accum = s/4.;
+   float prev = 0.;
+   float tw = 0.;
+   for (int i = 0; i < 26; ++i) {
+      float mag = dot(p, p);
+      p = abs(p) / mag + vec3(-.5, -.4, -1.5);
+      float w = exp(-float(i) / 7.);
+      accum += w * exp(-strength * pow(abs(mag - prev), 2.2));
+      tw += w;
+      prev = mag;
+   } 
+   return max(0., 5. * accum / tw - .7);
+}
+
+vec3 nrand3( vec2 co ){
+  vec3 a = fract( cos( co.x*8.3e-3 + co.y )*vec3(1.3e5, 4.7e5, 2.9e5) );
+  vec3 b = fract( sin( co.x*0.3e-3 + co.y )*vec3(8.1e5, 1.0e5, 0.1e5) );
+  vec3 c = mix(a, b, 0.5);
+  return c;
+}
+
+vec2 move(vec2 g, vec2 p, float t){
+  return sin( t * 2. + 9. * fract(sin((floor(g)+p)*mat2(2,7,2,5)*mat2(7,-2,2,5))));
+}
+
+float df(vec2 p, vec2 dir, float v)
+{
+    float a = atan(dir.x, dir.y);
+    p *= mat2(cos(a), -sin(a), sin(a), cos(a));
+    p *= 16.; p.y *= -0.75;
+    float r = dot(p,p) * 0.02 * cos(length(vec2(p.x-dir.y, dir.x-p.y))*3.-time * (20.+4.*cos(time/4.7)))*v;
+    p *= mat2(cos(r), -sin(r), sin(r), cos(r));
+    return mix(max(abs(p.x)+p.y, abs(p.y*p.x)), length(p)*5., 0.04);
+}
+
+void main(){
+  vec2 position = coordinate;
+  vec4 color;
+  if(integer == 3 || integer == 13){// Dancing screen
+    position = position + vec2(0.03 * sin(time * 3.0), 0.03 * cos(time * 4.0));
+  }
+  else if(integer == 5 || integer == 15){ // Ondulating screen
+    position.y = position.y + 0.25 * sin(sin(time) * 0.5 *
+                                                (4.0 * position.x - 2.0));
+  }
+  else if(integer == 7 || integer == 17){ // Dancing deformation
+    vec3 P = vec3(position, time / 5.0);
+    position.x += 0.064 * default3DFbm2(P, 2.0, 2.0, 0.9) - 0.04;
+    position.y += 0.064 * default3DFbm2(P, 2.0, 2.0, 0.9) - 0.04;
+  }
+  if(position.x >= 0.0 && position.x <= 1.0 &&
+     position.y >= 0.0 && position.y <= 1.0)
+    color = texture2D(texture1, position);
+  else
+    color = vec4(0.0, 0.0, 0.0, 0.0);
+  if(integer >= 10 && vec3(color) == vec3(0.0, 0.0, 0.0)){
+    vec2 surfacePosition = position;
+    vec2 uv = surfacePosition;
+    vec2 uvs = uv ;
+    vec3 p = vec3(uvs / 4., 0) + vec3(1., -1.3, 0.);
+    p += .2 * vec3(sin(time / 32.), sin(time / 24.),  sin(time / 256.));
+    float freqs[4];
+    freqs[0] = 0.05;
+    freqs[1] = 0.3; 
+    freqs[2] = 0.3;
+    freqs[3] = 0.7; 
+   
+   float t = field(p,freqs[3], 26);
+   float v = (1. - exp((abs(uv.x) - 1.) * 6.)) *
+     (1. - exp((abs(uv.y) - 1.) * 6.));
+   
+   //Second Layer
+   vec3 p2 = vec3(uvs / (4.+sin(time*0.055)*0.2+0.2+
+                         sin(time*0.075)*0.3+0.4), 1.5) + vec3(2., -1.3, -1.);
+   p2 += 0.25 * vec3(sin(time / 32.), sin(time / 24.),  sin(time / 256.));
+   float t2 = field(p2,freqs[3], 18);
+   vec4 c2 =  mix(.2, 0.2, v) * vec4(1.3 * t2 * t2 * t2 ,1.8  * t2 * t2 ,
+                                     t2* freqs[0], t2);
+    //Let's add some stars
+   //Thanks to http://glsl.heroku.com/e#6904.0
+   vec2 seed = p.xy * 2.0;   
+   seed = floor(seed * object_size.x);
+   vec3 rnd = nrand3( seed );
+   vec4 starcolor = vec4(pow(rnd.y,20.0));
+  
+   //Second Layer
+   vec2 seed2 = p2.xy * 3.0;
+   seed2 = floor(seed2 * object_size.x);
+   vec3 rnd2 = nrand3( seed2 );
+   starcolor += vec4(pow(rnd2.y,40.0));
+   color = mix(freqs[3]-.5, 1.,1.0) * vec4(1.5*freqs[2] * t * t* t , 1.2*freqs[1] * t * t, freqs[3]*t, 1.0) +c2+starcolor;
+  }
+  if(integer == 2 || integer == 12){// CLoud
+    vec3 P = vec3(position, time / 5.0);
+    float c;
+    if(integer == 12)
+      c = default3DFbm(P, 2.0, 2.0, 10, 0.6);
+    else
+      c = default3DFbm(P, 2.0, 2.0, 10, 0.9);
+    color += vec4(c, c, c, c);
+  }
+  if(integer == 4 || integer == 14){// Poles
+    vec4 poles;
+    vec2 g = position * object_size * 1.5;
+    float d = 15.;
+    vec2 p = g /= object_size.y / d, ac,al;
+    float adjust = default3DFbm2(vec3(position, time), 2.0, 2.0, 0.9);
+    //vec3 adjust = nrand3(position);
+    for(int x=-1;x<=1;x++)
+      for(int y=-1;y<=1;y++){
+        p = vec2(x,y),
+          al = move(g,p, time-0.1),
+          ac = move(g,p, time),
+          p += .5 + .5 * ac - fract(g),
+          d = min(d, df(p, ac-al, length(ac-move(g,p, time+0.1))*0.5));
+      }
+    poles = mix(vec4(1.0), vec4(1.,.98,.96,1.)*min(1., 1.2-0.2*length(0.1 * position)), d);
+    if(distance(poles, vec4(1.0, 1.0, 1.0, 1.0)) < 0.09){
+      color += poles;
+      color.r = 0.3568 - 0.25 * adjust;
+      color.g = 0.2902 - 0.25 * adjust;
+      color.b = 0.0784 - 0.25 * adjust;
+    }
+  }
+  else if(integer == 6 || integer == 16){
+    float r = 0.0;
+    float g = 0.0;
+    float b = 0.0;
+    float x = 0.;
+    for(int i = 0; i < 25; i++) {
+      x += float(i)*float(i)/64.;
+      r += sin(x)*1.62/length(100.0*position-vec2(x-g*50.,50.*g*b*sin(time)+50.));
+      g += cos(x)*1.62/length(100.0*position-vec2(x-r*50.,50.*r*b*cos(time)+50.));
+      b += tan(x)*1.62/length(100.0*position-vec2(x+b*50.,50.*b*sin(time)+50.));
+    }
+
+    color = 0.25 * (color + 3.0*vec4(r, g, b, 1.0));
+  }
+  if(integer == 9 || integer == 19)
+    color.r = color.g = color.b = (color.r + color.g + color.b) / 3.0;
+  else if(integer == 20)
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+  gl_FragData[0] = color;
+}
+ 
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+
+attribute vec3 vertex_position;
+
+uniform vec4 object_color;
+uniform mat4 model_view_matrix;
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+varying mediump vec2 coordinate;
+
+void main(){
+  mat4 size;
+  if(integer == 1 || integer == 11)// Upside down screen 
+    coordinate = vec2(vertex_position[0] + 0.5, 0.5 - vertex_position[1]);
+  else
+    coordinate = vec2(vertex_position[0] + 0.5, vertex_position[1] + 0.5);
+  gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
+
+}
+#version 100
+
+precision highp float;
+precision highp int;
+precision lowp sampler2D;
+precision lowp samplerCube;
+
+uniform vec4 object_color;
+
+uniform float time;
+uniform vec2 object_size;
+
+uniform int integer;
+
+uniform sampler2D texture1;
+
+varying vec2 position;
+
+#define TAU 6.28318530718
+#define MAX_ITER 3
+
+void main( void ) {
+  float dist = distance(position, vec2(0.0, 0.0));
+  int draw = 0, p = 0;
+  vec4 color;
+  if((integer == 1 || integer == 11) && dist > 0.5){
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+  }
+  else if(integer == 1 || integer == 11){
+    for(float x = -0.5; x < 0.5 ; x += 0.05)
+      for(float y = -0.5; y < 0.5; y += 0.05)
+        if(distance(vec2(float(x), float(y)), position) <=
+           1.0/object_size.x)
+          draw = 1;
+  }
+  if((integer == 1 || integer == 11) && draw == 0){
+    gl_FragColor= vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(integer < 10)
+    gl_FragColor =  vec4(1.0, 1.0, 1.0, 1.0);
+  else if(dist > 0.502){
+    gl_FragColor =  vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(dist > 0.48 || position.y > 0.3 || position.y < -0.3){
+    float c = max((position.x + 0.2)*0.4, 0.125);
+    gl_FragColor =  vec4(c, c, c, 1.0);
+  }
+  else{
+    float gtime = time * .5+23.0;
+    // uv should be the 0-1 uv of texture...
+    vec2 uv = position;
+    vec2 p = mod(uv*TAU, TAU)-250.0;
+    vec2 i = vec2(p);
+    float c = 1.0;
+    float inten = .005;
+    
+    for (int n = 0; n < MAX_ITER; n++) {
+      float t = gtime * (0.0 - (3.0 / float(n+1)));
+      i = p + vec2(cos(t - i.x) + sin(t + i.y), sin(t - i.y) + cos(t + i.x));
+      c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),p.y / (cos(i.y+t)/inten)));
+    }
+    c /= float(MAX_ITER);
+    c = 1.17-pow(c, 1.4);
+    vec3 colour = vec3(pow(abs(c), 8.0));
+    colour = clamp(colour + vec3(object_color), 0.0, 1.0);
+    
+    gl_FragColor = vec4(colour, 1.0);
+  }
+}
+
+
+//void main(){
+//  mainImage(gl_FragColor, gl_FragCoord.xy);
+//}
+ 
+#version 100
+
+precision highp float;
+precision highp int;
+precision lowp sampler2D;
+precision lowp samplerCube;
+
+attribute vec3 vertex_position;
+
+uniform vec4 object_color;
+uniform mat4 model_view_matrix;
+uniform float time;
+uniform vec2 object_size;
+
+varying vec2 position;
+
+void main(){
+  position = vec2(vertex_position);
+  gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
+}
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+uniform vec4 object_color;
+
+uniform float time;
+uniform vec2 object_size;
+
+uniform int integer;
+
+uniform sampler2D texture1;
+
+varying vec2 position;
+
+void main(){
+  vec2 resolution = object_size;
+  float dist = distance(position, vec2(0.0, 0.0));
+  if(integer == 0)
+    gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+  else if(dist >= 0.49){
+    gl_FragData[0] = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(dist < 0.025){
+    gl_FragData[0] = vec4(1.0, 1.0, 1.0, 0.25);
+  }
+  else{
+    vec2 uv = (position*40.0)/resolution.y-vec2(-0.25, 0.0);
+    float intensity = 0.;
+    for (float i = 0.; i < 54.; i++) {
+      float angle = i/27. * 3.14159;
+      vec2 xy = uv + vec2(0.6 * cos(angle) - 0.25, 0.6 * sin(angle));
+      vec2 xy2 = uv + vec2(0.4 * cos(angle) - 0.25, 0.4 * sin(angle));
+      vec2 xy3 = uv + vec2(0.2 * cos(angle) - 0.25, 0.2 * sin(angle));
+      intensity += pow(1000000., (0.77 - length(xy) * 1.9) * (1. + 0.275 * fract(-i / 17. - time))) / 40000.;
+      intensity += pow(1000000., (0.77 - length(xy2) * 1.9) * (1. + 0.275 * fract(-i / 17. + time/1.5))) / 60000.;
+      intensity += pow(1000000., (0.77 - length(xy3) * 1.9) * (1. + 0.275 * fract(-i / 17. - time))) / 80000.;
+    }
+    gl_FragData[0] = vec4(clamp(intensity * vec3(0.2, 0.1, 0.6), vec3(0.), vec3(1.)), 1.);
+  }
+}
+ 
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+
+attribute vec3 vertex_position;
+
+uniform vec4 object_color;
+uniform mat4 model_view_matrix;
+uniform float time;
+uniform vec2 object_size;
+
+varying vec2 position;
+
+void main(){
+  gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
+  position = vec2(vertex_position);
+}
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+uniform vec4 object_color;
+
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+varying vec2 position;
+
+uniform sampler2D texture1;
+
+const float D0 = float(0x00ff);
+const float D1 = float(0x0081);
+const float D2 = float(0x1177);
+const float D3 = float(0x11e7);
+const float D4 = float(0x1189);
+const float D5 = float(0x11ee);
+const float D6 = float(0x11fe);
+const float D7 = float(0x008f);
+const float D8 = float(0x11ff);
+const float D9 = float(0x11ef);
+
+float digit(float t){
+  if(t == 0.0) {
+    return D0;
+  }
+  else if(t == 1.0) {
+    return D1;
+  }
+  else if(t == 2.0) {
+    return D2;
+  }
+  else if(t == 3.0) {
+    return D3;
+  }
+  else if(t == 4.0) {
+    return D4;
+  }
+  else if(t == 5.0) {
+    return D5;
+  }
+  else
+    return 0.0;
+}
+
+//Checks if bit 'b' is set in number 'n'
+bool bit(float n, float b){
+  return mod(floor(n / exp2(floor(b))), 2.0) != 0.0;
+}
+
+//Distance to line p0,p1 at uv
+float dseg(vec2 p0,vec2 p1,vec2 uv){
+  vec2 dir = normalize(p1 - p0);
+  uv = (uv - p0) * mat2(dir.x, dir.y,-dir.y, dir.x);
+  return distance(uv, clamp(uv, vec2(0), vec2(distance(p0, p1), 0)));   
+}
+
+//Distance to the character defined in 'bits'
+float dchar(float bits, vec2 uv){
+  float d = 1e6;	
+  float n = floor(bits);
+  if(bits != 0.0){
+    //Segment layout and checking.
+    d = bit(n,  0.0) ? min(d, dseg(vec2( 0.500,  0.063), vec2( 0.500,  0.937), uv)) : d;
+    d = bit(n,  1.0) ? min(d, dseg(vec2( 0.438,  1.000), vec2( 0.063,  1.000), uv)) : d;
+    d = bit(n,  2.0) ? min(d, dseg(vec2(-0.063,  1.000), vec2(-0.438,  1.000), uv)) : d;
+    d = bit(n,  3.0) ? min(d, dseg(vec2(-0.500,  0.937), vec2(-0.500,  0.062), uv)) : d;
+    d = bit(n,  4.0) ? min(d, dseg(vec2(-0.500, -0.063), vec2(-0.500, -0.938), uv)) : d;
+    d = bit(n,  5.0) ? min(d, dseg(vec2(-0.438, -1.000), vec2(-0.063, -1.000), uv)) : d;
+    d = bit(n,  6.0) ? min(d, dseg(vec2( 0.063, -1.000), vec2( 0.438, -1.000), uv)) : d;
+    d = bit(n,  7.0) ? min(d, dseg(vec2( 0.500, -0.938), vec2( 0.500, -0.063), uv)) : d;
+    d = bit(n,  8.0) ? min(d, dseg(vec2( 0.063,  0.000), vec2( 0.438, -0.000), uv)) : d;
+    d = bit(n,  9.0) ? min(d, dseg(vec2( 0.063,  0.063), vec2( 0.438,  0.938), uv)) : d;
+    d = bit(n, 10.0) ? min(d, dseg(vec2( 0.000,  0.063), vec2( 0.000,  0.937), uv)) : d;
+    d = bit(n, 11.0) ? min(d, dseg(vec2(-0.063,  0.063), vec2(-0.438,  0.938), uv)) : d;
+    d = bit(n, 12.0) ? min(d, dseg(vec2(-0.438,  0.000), vec2(-0.063, -0.000), uv)) : d;
+    d = bit(n, 13.0) ? min(d, dseg(vec2(-0.063, -0.063), vec2(-0.438, -0.938), uv)) : d;
+    d = bit(n, 14.0) ? min(d, dseg(vec2( 0.000, -0.938), vec2( 0.000, -0.063), uv)) : d;
+    d = bit(n, 15.0) ? min(d, dseg(vec2( 0.063, -0.063), vec2( 0.438, -0.938), uv)) : d;
+  }
+  return d;
+}
+
+void main(){
+  if(integer < 10){
+    if(integer == 0){
+      if(position.y < - 0.3 || position.y > 0.3 || position.x > 0.25 ||
+         position.x < - 0.25)
+        gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+      else
+        gl_FragData[0] = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    else if(integer == 1){
+      if(position.x > 0.25)
+        gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+      else
+        gl_FragData[0] = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    else if(integer == 2){
+      if(position.y < -0.3 || position.y > 0.3 ||
+         (position.y > -0.1 && position.y < 0.1) ||
+         (position.y > 0.1 && position.x > 0.25) ||
+         (position.y < -0.1 && position.x < -0.25))
+        gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+      else
+        gl_FragData[0] = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    else if(integer == 3){
+      if(position.x > 0.25 || position.y < -0.3 || position.y > 0.3 ||
+         (position.y > -0.1 && position.y < 0.1))
+        gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+      else
+        gl_FragData[0] = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    else if(integer == 4){
+      if(position.x > 0.25 || (position.y > -0.1 && position.y < 0.1) ||
+         (position.y > 0.1 && position.x < -0.25))
+        gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+      else
+        gl_FragData[0] = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    else if(integer == 5){
+      if(position.y < -0.3 || position.y > 0.3 ||
+         (position.y > -0.1 && position.y < 0.1) ||
+         (position.y < -0.1 && position.x > 0.25) ||
+         (position.y > 0.1 && position.x < -0.25))
+        gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+      else
+        gl_FragData[0] = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    else{
+      gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
+    } 
+  }
+  else{
+    vec2 coord = (position + vec2(0.5, 0.5)) * object_size;
+    vec2 p = 0.2 * ( coord / object_size.xy - 0.5 ) *
+      object_size.xy / object_size.x;
+    float d1 = floor(mod(time / 1.0, 10.0));
+    vec2 p1 = p / 0.125;
+    float d = dchar(digit(float(integer) - 10.0), p1) * 200.0;
+    if(d > 10.0)
+      d = 100000.0;
+    gl_FragData[0] = vec4(vec3(0.0, 1.0, 0.0) / d, 1.0);
+  }
+}
+ 
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+
+attribute vec3 vertex_position;
+
+uniform vec4 object_color;
+uniform mat4 model_view_matrix;
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+varying vec2 position;
+
+void main(){
+  gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
+  position = vec2(vertex_position);
+}
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+uniform vec4 object_color;
+
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+uniform sampler2D texture1;
+
+varying vec2 position;
+
+void main(){
+  vec4 color;
+  float dst, r, g, b;
+  if(position.y < 0.05){ //linha 1
+    if(position.x > 0.65 && position.x < 0.7)
+      color = vec4(0.718, 0.07, 0.07, 1.0);
+    else
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.1){ // Linha 2
+    if(position.x < 0.6)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.65)
+      color = vec4(0.695, 0.07, 0.07, 1.0);
+    else if(position.x < 0.75)
+      color = vec4(0.617, 0.019, 0.019, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.15){ // Linha 3
+    if(position.x < 0.55)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.6)
+      color = vec4(0.836, 0.871, 0.871, 1.0);
+    else if(position.x < 0.65)
+      color = vec4(0.8, 0.852, 0.953, 1.0);
+    else if(position.x < 0.7)
+      color = vec4(0.613, 0.031, 0.031, 1.0);
+    else if(position.x < 0.75)
+      color = vec4(0.547, 0.0, 0.0, 1.0);
+    else if(position.x < 0.8)
+      color = vec4(0.5, 0.0, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.2){ // Linha 4
+    if(position.x < 0.5)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.55)
+      color = vec4(0.8125, 0.8045, 0.7695, 1.0);
+    else if(position.x < 0.6)
+      color = vec4(0.801, 0.852, 0.953, 1.0);
+    else if(position.x < 0.65)
+      color = vec4(0.836, 0.961, 0.949, 1.0);
+    else if(position.x < 0.7)
+      color = vec4(0.723, 0.66, 0.656, 1.0);
+    else if(position.x < 0.75)
+      color = vec4(0.523, 0.0625, 0.0625, 1.0);
+    else if(position.x < 0.85)
+      color = vec4(0.453, 0.0, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.25){ // Linha 5
+    if(position.x < 0.45)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.5)
+      color = vec4(1.0, 0.773, 0.094, 1.0);
+    else if(position.x < 0.55)
+      color = vec4(0.922, 0.167, 0.0039, 1.0);
+    else if(position.x < 0.6)
+      color = vec4(0.738, 0.727, 0.742, 1.0);
+    else if(position.x < 0.65)
+      color = vec4(0.703, 0.94, 0.891, 1.0);
+    else if(position.x < 0.7)
+      color = vec4(0.785, 0.887, 0.879, 1.0);
+    else if(position.x < 0.75)
+      color = vec4(0.766, 0.781, 0.777, 1.0);
+    else if(position.x < 0.8)
+      color = vec4(0.555, 0.172, 0.172, 1.0);
+    else if(position.x < 0.85)
+      color = vec4(0.488, 0.0, 0.0, 1.0);
+    else if(position.x < 0.9)
+      color = vec4(0.473, 0.0, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.3){ // Linha 6
+    if(position.x < 0.45)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.5)
+      color = vec4(0.965, 0.641, 0.0, 1.0);
+    else if(position.x < 0.55)
+      color = vec4(0.961, 0.625, 0.0, 1.0);
+    else if(position.x < 0.6)
+      color = vec4(0.945, 0.680, 0.0039, 1.0);
+    else if(position.x < 0.65)
+      color = vec4(0.789, 0.758, 0.617, 1.0);
+    else if(position.x < 0.7)
+      color = vec4(0.777, 0.832, 0.988, 1.0);
+    else if(position.x < 0.75)
+      color = vec4(0.891, 0.965, 0.980, 1.0);
+    else if(position.x < 0.8)
+      color = vec4(0.886, 0.953, 0.945, 1.0);
+    else if(position.x < 0.85)
+      color = vec4(0.616, 0.271, 0.271, 1.0);
+    else if(position.x < 0.9)
+      color = vec4(0.510, 0.000, 0.000, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.35){ // Linha 7
+    if(position.x < 0.4)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.45)
+      color = vec4(0.249, 0.641, 0.0, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.9764705882352941, 0.6588235294117647, 0.0, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.9254901960784314, 0.6274509803921569, 0.0, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.9725490196078431, 0.7215686274509804, 0.0196078431372549, 1.0);
+    else if(position.x < 0.65)
+      color = vec4 (0.9882352941176471, 0.6705882352941176, 0.0, 1.0);
+    else if(position.x < 0.7)
+      color = vec4 (0.8823529411764706, 0.7725490196078432, 0.5529411764705883, 1.0);
+    else if(position.x < 0.75)
+      color = vec4 (0.8117647058823529, 0.8745098039215686, 1.0, 1.0);
+    else if(position.x < 0.8)
+      color = vec4 (0.8705882352941177, 0.9333333333333333, 0.9725490196078431, 1.0);
+    else if(position.x < 0.85)
+      color = vec4 (0.803921568627451, 0.8352941176470589, 0.8235294117647058, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.4){ // Linha 8
+    if(position.x < 0.35)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.9764705882352941, 0.6588235294117647, 0.0, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.9294117647058824, 0.615686274509804, 0.0, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.9607843137254902, 0.6980392156862745, 0.0196078431372549, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (1.0, 0.7647058823529411, 0.00392156862745098, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.9921568627450981, 0.7058823529411765, 0.0, 1.0);
+    else if(position.x < 0.65)
+      color = vec4 (1.0, 0.6627450980392157, 0.0, 1.0);
+    else if(position.x < 0.7)
+      color = vec4 (1.0, 0.6862745098039216, 0.0, 1.0);
+    else if(position.x < 0.75)
+      color = vec4 (0.8705882352941177, 0.7490196078431373, 0.39215686274509803, 1.0);
+    else if(position.x < 0.8)
+      color = vec4 (0.7411764705882353, 0.7725490196078432, 0.8549019607843137, 1.0);
+    else if(position.x < 0.85)
+      color = vec4 (0.7686274509803922, 0.803921568627451, 0.8235294117647058, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.45){ // Linha 9
+    if(position.x < 0.3)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.35)
+      color = vec4 (0.996078431372549, 0.7294117647058823, 0.03529411764705882, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.9333333333333333, 0.611764705882353, 0.0, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.9490196078431372, 0.6823529411764706, 0.0196078431372549, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (1.0, 0.7647058823529411, 0.00784313725490196, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.996078431372549, 0.7137254901960784, 0.0, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.9882352941176471, 0.6666666666666666, 0.00784313725490196, 1.0);
+    else if(position.x < 0.65)
+      color = vec4 (0.996078431372549, 0.7254901960784313, 0.03529411764705882, 1.0);
+    else if(position.x < 0.7)
+      color = vec4 (0.996078431372549, 0.7333333333333333, 0.00784313725490196, 1.0);
+    else if(position.x < 0.75)
+      color = vec4 (0.9411764705882353, 0.5490196078431373, 0.0, 1.0);
+    else if(position.x < 0.8)
+      color = vec4 (0.8, 0.6039215686274509, 0.2823529411764706, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.5){ // Linha 10
+    if(position.x < 0.25)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.3)
+      color = vec4 (1.0, 0.7764705882352941, 0.1843137254901961, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (0.9411764705882353, 0.611764705882353, 0.0, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.9372549019607843, 0.6666666666666666, 0.0196078431372549, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (1.0, 0.7607843137254902, 0.011764705882352941, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (1.0, 0.7294117647058823, 0.0, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.9882352941176471, 0.6666666666666666, 0.00392156862745098, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.996078431372549, 0.7098039215686275, 0.03529411764705882, 1.0);
+    else if(position.x < 0.65)
+      color = vec4 (0.984313725490196, 0.7411764705882353, 0.01568627450980392, 1.0);
+    else if(position.x < 0.7)
+      color = vec4 (0.9215686274509803, 0.6078431372549019, 0.0, 1.0);
+    else if(position.x < 0.75)
+      color = vec4 (0.8980392156862745, 0.5411764705882353, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.55){ // Linha 11
+    if(position.x < 0.25)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.3)
+      color = vec4 (0.9529411764705882, 0.615686274509804, 0.0, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (0.9333333333333333, 0.6470588235294118, 0.011764705882352941, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.9333333333333333, 0.6470588235294118, 0.011764705882352941, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (1.0, 0.7411764705882353, 0.0, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.9882352941176471, 0.6705882352941176, 0.0, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.996078431372549, 0.6980392156862745, 0.03137254901960784, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.9882352941176471, 0.7450980392156863, 0.023529411764705882, 1.0);
+    else if(position.x < 0.65)
+      color = vec4 (0.9372549019607843, 0.6431372549019608, 0.0, 1.0);
+    else if(position.x < 0.7)
+      color = vec4 (0.8823529411764706, 0.5137254901960784, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.6){ // Linha 12
+    if(position.x < 0.2)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.9647058823529412, 0.6392156862745098, 0.0, 1.0);
+    else if(position.x < 0.3)
+      color = vec4 (0.9254901960784314, 0.6274509803921569, 0.0, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (0.9882352941176471, 0.7411764705882353, 0.01568627450980392, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (1.0, 0.7529411764705882, 0.0, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.9882352941176471, 0.6784313725490196, 0.0, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.9921568627450981, 0.6862745098039216, 0.027450980392156862, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.9921568627450981, 0.7490196078431373, 0.027450980392156862, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.9490196078431372, 0.6705882352941176, 0.0, 1.0);
+    else if(position.x < 0.65)
+      color = vec4 (0.8823529411764706, 0.5058823529411764, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.65){ // Linha 13
+    if(position.x < 0.15)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.2)
+      color = vec4 (0.9686274509803922, 0.6666666666666666, 0.0, 1.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.9294117647058824, 0.615686274509804, 0.0, 1.0);
+    else if(position.x < 0.3)
+      color = vec4 (0.9725490196078431, 0.7254901960784313, 0.0196078431372549, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (1.0, 0.7568627450980392, 0.0, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.9921568627450981, 0.6862745098039216, 0.0, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.9921568627450981, 0.6745098039215687, 0.0196078431372549, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.996078431372549, 0.7450980392156863, 0.03137254901960784, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.9607843137254902, 0.6980392156862745, 0.0, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.8901960784313725, 0.5176470588235295, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.7){ // Linha 14
+    if(position.x < 0.15)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.2)
+      color = vec4 (0.9137254901960784, 0.6705882352941176, 0.25098039215686274, 1.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.9882352941176471, 0.6862745098039216, 0.0, 1.0);
+    else if(position.x < 0.3)
+      color = vec4 (1.0, 0.7725490196078432, 0.0, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (0.9921568627450981, 0.6980392156862745, 0.0, 1.0);
+    else if(position.x < 0.4)    
+      color = vec4 (0.9882352941176471, 0.6666666666666666, 0.01568627450980392, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.996078431372549, 0.7372549019607844, 0.03529411764705882, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.9686274509803922, 0.7176470588235294, 0.0, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.8980392156862745, 0.5372549019607843, 0.0, 1.0);
+    else if(position.x < 0.6)
+      color = vec4 (0.9019607843137255, 0.6274509803921569, 0.1843137254901961, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.75){ // Linha 15
+    if(position.x < 0.1)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.15)
+      color = vec4 (0.9294117647058824, 0.8549019607843137, 0.8980392156862745, 1.0);
+    else if(position.x < 0.2)
+      color = vec4 (0.9294117647058824, 0.7843137254901961, 0.6470588235294118, 1.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.9058823529411765, 0.7137254901960784, 0.34901960784313724, 1.0);
+    else if(position.x < 0.3)
+      color = vec4 (0.9490196078431372, 0.6901960784313725, 0.10980392156862745, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (1.0, 0.6705882352941176, 0.0, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.996078431372549, 0.7254901960784313, 0.03529411764705882, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.9764705882352941, 0.7294117647058823, 0.00784313725490196, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.9098039215686274, 0.5647058823529412, 0.0, 1.0);
+    else if(position.x < 0.55)
+      color = vec4 (0.8941176470588236, 0.5764705882352941, 0.07450980392156863, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.8){ // Linha 16
+    if(position.x < 0.1)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.15)
+      color = vec4 (0.9176470588235294, 0.8, 0.7294117647058823, 1.0);
+    else if(position.x < 0.2)
+      color = vec4 (0.9137254901960784, 0.7764705882352941, 0.7686274509803922, 1.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.807843137254902, 0.6901960784313725, 0.8862745098039215, 1.0);
+    else if(position.x < 0.3)
+      color = vec4 (0.8470588235294118, 0.6235294117647059, 0.42745098039215684, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (1.0, 0.7137254901960784, 0.0, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.9921568627450981, 0.7254901960784313, 0.0, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.9254901960784314, 0.6, 0.0, 1.0);
+    else if(position.x < 0.5)
+      color = vec4 (0.8823529411764706, 0.5411764705882353, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.85){ // Linha 17
+    if(position.x < 0.1)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.15)
+      color = vec4 (0.8941176470588236, 0.7607843137254902, 0.7019607843137254, 1.0);
+    else if(position.x < 0.2)
+      color = vec4 (0.8784313725490196, 0.7058823529411765, 0.6431372549019608, 1.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.8313725490196079, 0.6470588235294118, 0.6196078431372549, 1.0);
+    else if(position.x < 0.3)
+      color = vec4 (0.8470588235294118, 0.6509803921568628, 0.5450980392156862, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (0.9058823529411765, 0.7098039215686275, 0.39215686274509803, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.9058823529411765, 0.6470588235294118, 0.21176470588235294, 1.0);
+    else if(position.x < 0.45)
+      color = vec4 (0.8862745098039215, 0.5176470588235295, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.9){ // Linha 18
+    if(position.x < 0.1)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.15)
+      color = vec4 (0.9294117647058824, 0.7529411764705882, 0.6823529411764706, 1.0);
+    else if(position.x < 0.2)
+      color = vec4 (0.8509803921568627, 0.6549019607843137, 0.592156862745098, 1.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.8431372549019608, 0.6352941176470588, 0.5450980392156862, 1.0);
+    else if(position.x < 0.3)
+      color = vec4 (0.8666666666666667, 0.6627450980392157, 0.5803921568627451, 1.0);
+    else if(position.x < 0.35)
+      color = vec4 (0.8823529411764706, 0.6980392156862745, 0.6980392156862745, 1.0);
+    else if(position.x < 0.4)
+      color = vec4 (0.8823529411764706, 0.6784313725490196, 0.5333333333333333, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else if(position.y < 0.95){ // Linha 19
+    if(position.x < 0.1)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.15)
+      color = vec4 (1.0, 0.7137254901960784, 0.0, 1.0);
+    else if(position.x < 0.2)
+      color = vec4 (0.8274509803921568, 0.6196078431372549, 0.5450980392156862, 1.0);
+    else if(position.x < 0.25)
+      color = vec4 (0.8274509803921568, 0.6196078431372549, 0.5450980392156862, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  else{ // Linha 20
+    if(position.x < 0.1)
+      color = vec4(0.0, 0.0, 0.0, 0.0);
+    else if(position.x < 0.15)
+      color = vec4 (1.0, 0.7137254901960784, 0.0, 1.0);
+    else color = vec4(0.0, 0.0, 0.0, 0.0);
+  }
+  dst = distance(color, vec4(1.0, 1.0, 0.0, 1.0));
+  r = sin(time);
+  g = cos(time * 0.5 + 0.25);
+  b = position.x * 0.5;
+  if(dst < 0.6)
+    gl_FragData[0] = vec4(r, g, b, 1.0);
+  else
+    gl_FragData[0] = color;
+}
+#version 100
+
+#if GL_FRAGMENT_PRECISION_HIGH == 1
+  precision highp float;
+  precision highp int;
+#else
+  precision mediump float;
+  precision mediump int;
+#endif
+  precision lowp sampler2D;
+  precision lowp samplerCube;
+
+
+attribute vec3 vertex_position;
+
+uniform vec4 object_color;
+uniform mat4 model_view_matrix;
+uniform float time;
+uniform vec2 object_size;
+uniform int integer;
+
+varying vec2 position;
+
+void main(){
+  gl_Position = model_view_matrix * vec4(vertex_position, 1.0);
+  position = vec2(vertex_position) + vec2(0.5, 0.5);
+}
