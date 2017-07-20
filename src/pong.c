@@ -181,6 +181,10 @@ MAIN_LOOP pong(void){
           if(W.random() % 5 < 2)
             show_danger(); // Regenerate danger
         }
+        if(get_score(2) == 4 && !(bomb -> visible) && !in_danger){
+          if(W.random() % 5 == 0)
+            show_bomb();
+        }
       }
     }
   }
