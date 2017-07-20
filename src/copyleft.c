@@ -1,5 +1,5 @@
 /*
-Copyright (c) Thiago Leucz Astrizi, 2017
+Copyright (c) Thiago "Harry" Leucz Astrizi, 2017
 
 This file is part of pong.
 
