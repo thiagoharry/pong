@@ -25,7 +25,7 @@ void initialize_bomb(void){
                          W.random() % W.height,
                          BALL_WIDTH / 2, BALL_WIDTH / 2,
                          1.0, 1.0, 1.0, 1.0);
-  bomb -> visible = false;
+  bomb -> visible = true;
   explosion = false;
 }
 
