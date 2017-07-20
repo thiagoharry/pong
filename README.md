@@ -68,8 +68,22 @@ the game.
 
 ## Credits
 
-This game was created and programmed by @thiagoharry. 
-The font used in the game was created by @ArmlessJohn404 which also created a pong game.
-The sound used in the game is taken from https://www.freesound.org/, created by users `noisecollector`, `projectsu012` and `n-audioman`.
-I also got some sounds from https://opengameart.org. Thanks for users `DoKashiteru`
-A lot of shader effects were created adapting code from http://glslsandbox.com/.
+###### Created and programmed by
+
+* [thiagoharry](https://github.com/thiagoharry/)
+
+###### Fonts used in title screen, sound effect ideas
+
+* [ArmlessJohn404](https://github.com/ArmlessJohn/)
+
+###### Sound Effects
+
+* [NoiseCollector](http://freesound.org/people/NoiseCollector/)
+* [ProjectsU012](http://freesound.org/people/ProjectsU012/)
+* [DoKashiteru](https://opengameart.org/users/dokashiteru)
+* [qubodup](https://opengameart.org/users/qubodup)
+* [Retimer](https://opengameart.org/users/retimer)
+
+###### Shaders
+
+* Anonymous authors who posted interesting shaders in http://www.glslsandbox.com/
