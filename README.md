@@ -86,4 +86,4 @@ the game.
 
 ###### Shaders
 
-* Anonymous authors who posted interesting shaders in http://www.glslsandbox.com/
+* Anonymous authors who posted interesting shaders at http://www.glslsandbox.com/
