@@ -225,8 +225,8 @@ MAIN_LOOP pong(void){
     if(number_of_items == 6 && W.game -> players == 1){
       W.game -> game_completed = true;
     }
-    else
-      W.final_shader_integer = 0;
+    W.final_shader_integer = 0;
+    W.change_final_shader(4);
     Wexit_loop();
   }
 

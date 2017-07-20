@@ -173,8 +173,12 @@ void update_ball(void){
 bool collision_ball_object(struct interface *obj){
   float tmp = (obj -> x - ball -> x) / ball_dx;
   float pos_y;
-  float tolerance = 2.0;
-  if(tmp < 0.0 || tmp > ball_dx * ball_speed){
+  float tolerance;
+  if(obj == item)
+    tolerance = ball -> height / 4.0;
+  else
+    tolerance = ball -> height / 8.0;
+  if(tmp < 0.0 || tmp > ball_speed){
     // Ball isn't going in object direction or is too far away
     return false;
   }

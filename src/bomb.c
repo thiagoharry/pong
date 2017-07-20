@@ -40,7 +40,7 @@ void show_bomb(void){
                      W.random() % W.height);
   }
   else{
-    W.move_interface(bomb, paddle1 -> width - 2 * ball -> width,
+    W.move_interface(bomb, paddle1 -> width + 2 * ball -> width,
                      W.random() % W.height);
   }
   bomb -> visible = true;
