@@ -35,12 +35,12 @@ window= SDL_SetVideoMode(
 #if W_WIDTH >  0
 W.width= W_WIDTH,
 #else
-W.width= W.resolution_x,
+W.width= ((W.resolution_x> 800)?(W.resolution_x):(800)),
 #endif
 #if W_HEIGHT >  0
 W.height= W_HEIGHT,
 #else
-W.height= W.resolution_y,
+W.height= ((W.resolution_y> 600)?(W.resolution_y):(600)),
 #endif
 0,
 SDL_OPENGL
