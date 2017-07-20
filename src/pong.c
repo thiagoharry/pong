@@ -49,9 +49,6 @@ MAIN_LOOP pong(void){
     W.final_shader_integer = 0;
   }
  LOOP_BODY:
-  if(W.keyboard[W_ESC])
-    Wexit_loop();
-
   // First we check if someone scored
   {
     int score;
@@ -221,7 +218,7 @@ MAIN_LOOP pong(void){
   // Checking for end of game:
   if(game_ended &&
      ((!explosion && W.t - end_moment > 3000000) ||
-      (W.t - end_moment > 6000000))){
+      (W.t - end_moment > 5000000))){
     if(number_of_items == 6 && W.game -> players == 1){
       W.game -> game_completed = true;
     }

@@ -1,8 +1,20 @@
 # pong
 
-You can play this game at: XXX
+You can play this game at: https://thiagoharry.github.com/pong
 
-Arrow keys control the paddle. In two-players mode, W and S also control one of the paddles. And the Enter key select options in the menu.
+## Game Controls
+
+* UP: Move left paddle up in 1-player mode. Move right paddle up in
+  2-players-mode. Move the cursor up in the title screen.
+
+* DOWN: Move left paddle down in 1-player-mode. Move right paddle down
+  in 2-players-mode. Move the cursor down in the title screen.
+
+* W: Move left paddle up in 2-players mode.
+
+* S: Move left paddle down in 2-players mode.
+
+* ENTER: Select option in the title screen.
 
 This is a Pong game written in C using the Weaver Game Engine (https://thiagoharry.github.io/weaver/). It uses OpenGL, OpenAL and was compiled to asm.js.
 
