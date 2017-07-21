@@ -219,11 +219,15 @@ MAIN_LOOP pong(void){
   if(game_ended &&
      ((!explosion && W.t - end_moment > 3000000) ||
       (W.t - end_moment > 5000000))){
-    if(number_of_items == 6 && W.game -> players == 1){
+    if(number_of_items >= 6 && W.game -> players == 1){
       W.game -> game_completed = true;
+      W.change_final_shader(4);
+      W.final_shader_integer = 1;
     }
-    W.final_shader_integer = 0;
-    W.change_final_shader(4);
+    else{
+      W.change_final_shader(4);
+      W.final_shader_integer = 0;
+    }
     Wexit_loop();
   }
 
