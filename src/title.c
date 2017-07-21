@@ -33,19 +33,24 @@ static int menu_selection;
 // custom shader to the entire screen:
 MAIN_LOOP title(void){
  LOOP_INIT:
-  pong_title = W.new_interface(TITLE_SHADER, W.width / 2, W.height - 100,
-                               250, 100);
-  p1 = W.new_interface(START_SHADER, W.width / 2, 250,
-                         200, 25);
-  p2 = W.new_interface(START_SHADER, W.width / 2, 200,
-                       200, 25);
+  {
+    int y_position = 0.9 * W.height;
+    if(y_position + 0.08 * W.height > W.height)
+      y_position = W.height - 0.08 * W.height;
+    pong_title = W.new_interface(TITLE_SHADER, W.width / 2, y_position,
+                                 0.3 * W.width, 0.16 * W.height);
+  }
+  p1 = W.new_interface(START_SHADER, W.width / 2, 0.25 * W.height,
+                         0.2 * W.width, 0.03 * W.height);
+  p2 = W.new_interface(START_SHADER, W.width / 2, 0.2 * W.height,
+                       0.2 * W.width, 0.03 * W.height);
 #if W_TARGET == W_ELF
-  quit = W.new_interface(EXIT_SHADER, W.width / 2, 150,
-                         100, 25);
+  quit = W.new_interface(EXIT_SHADER, W.width / 2, 0.15 * W.height,
+                         0.1 * W.width, 0.03 * W.height);
 #endif
   cursor = W.new_interface(W_INTERFACE_PERIMETER,
-                           W.width / 2, 250,
-                           210, 35,
+                           W.width / 2, 0.25 * W.height,
+                           0.3 * W.width, 0.04 * W.height,
                            1.0, 1.0, 1.0, 1.0);
   // Loading all the sounds here and keeping them
   collision1 = W.new_sound("collision1.wav");
@@ -69,7 +74,7 @@ MAIN_LOOP title(void){
     if(menu_selection != 0){
       W.play_sound(collision1);
       menu_selection --;
-      W.move_interface(cursor, cursor -> x, cursor -> y + 50);
+      W.move_interface(cursor, cursor -> x, cursor -> y + 0.05 * W.height);
     }
   }
   else if(W.keyboard[W_DOWN] == 1){
@@ -82,7 +87,7 @@ MAIN_LOOP title(void){
        ){
       W.play_sound(collision2);
       menu_selection ++;
-      W.move_interface(cursor, cursor -> x, cursor -> y - 50);
+      W.move_interface(cursor, cursor -> x, cursor -> y - 0.05 * W.height);
     }
   }
   else if(W.keyboard[W_ENTER] == 1){
