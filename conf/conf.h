@@ -18,6 +18,9 @@
 // second, creates a "web" directory with a web application
 #define W_TARGET W_WEB
 
+#define W_WIDTH 100
+#define W_HEIGHT 100
+
 // This macro determines if we are writting a C program (W_C) or a C++
 // program (W_CPP):
 #define W_SOURCE W_C

@@ -20,11 +20,14 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 #include "score.h"
 
 void initialize_score(void){
+  int y_position = 0.9 * W.height;
+  if(y_position + 2.5 * W.height/27 > W.height)
+    y_position = W.height - 2.5 * W.height / 27;
   score1 = W.new_interface(SCORE_SHADER,
-                           0.375 * W.width, W.height - 100,
+                           0.375 * W.width, y_position,
                            3 * PADDLE_WIDTH, 5 * W.height/27);
   score2 = W.new_interface(SCORE_SHADER,
-                           0.625 * W.width, W.height - 100,
+                           0.625 * W.width, y_position,
                            3 * PADDLE_WIDTH, 5 * W.height/27);
 
   if(W.game -> game_completed){
