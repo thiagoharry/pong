@@ -23,11 +23,11 @@ extern"C"{
 void _initialize_canvas(void);
 void _finalize_canvas(void);
 /*249:*/
-#line 5695 "cweb/weaver.w"
+#line 5699 "cweb/weaver.w"
 
 void _Wresize_window(int width,int height);
 /*:249*//*255:*/
-#line 5758 "cweb/weaver.w"
+#line 5762 "cweb/weaver.w"
 
 void _Wmove_window(int x,int y);
 /*:255*/

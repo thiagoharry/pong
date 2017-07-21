@@ -1698,7 +1698,7 @@ void main(){
     float d1 = floor(mod(time / 1.0, 10.0));
     vec2 p1 = p / 0.125;
     float d = dchar(digit(float(integer) - 10.0), p1) * 200.0;
-    if(d > 10.0)
+    if(d > 15.0)
       d = 100000.0;
     gl_FragData[0] = vec4(vec3(0.0, 1.0, 0.0) / d, 1.0);
   }

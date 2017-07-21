@@ -47,7 +47,7 @@
 #define W_WIDTH 0
 #endif
 /*:209*//*325:*/
-#line 7220 "cweb/weaver.w"
+#line 7224 "cweb/weaver.w"
 
 #ifndef W_INSTALL_DATA
 #define W_INSTALL_DATA "/usr/share/games/"W_PROG

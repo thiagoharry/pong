@@ -248,7 +248,7 @@ XCloseDisplay(_dpy);
 
 }
 /*248:*/
-#line 5672 "cweb/weaver.w"
+#line 5676 "cweb/weaver.w"
 
 void _Wresize_window(int width,int height){
 int old_width,old_height;
@@ -262,11 +262,11 @@ W.width= width;
 W.height= height;
 glViewport(0,0,W.width,W.height);
 /*433:*/
-#line 9470 "cweb/weaver.w"
+#line 9474 "cweb/weaver.w"
 
 _update_interface_screen_size();
 /*:433*//*475:*/
-#line 10525 "cweb/weaver.w"
+#line 10529 "cweb/weaver.w"
 
 {
 
@@ -295,14 +295,14 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 /*:475*/
-#line 5684 "cweb/weaver.w"
+#line 5688 "cweb/weaver.w"
 
 #ifdef W_MULTITHREAD
 pthread_mutex_unlock(&_window_mutex);
 #endif
 }
 /*:248*//*254:*/
-#line 5741 "cweb/weaver.w"
+#line 5745 "cweb/weaver.w"
 
 void _Wmove_window(int x,int y){
 #ifdef W_MULTITHREAD

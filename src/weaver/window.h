@@ -42,11 +42,11 @@ typedef GLXContext
 (*glXCreateContextAttribsARBProc)(Display*,GLXFBConfig,GLXContext,Bool,
 const int*);
 /*:235*//*247:*/
-#line 5668 "cweb/weaver.w"
+#line 5672 "cweb/weaver.w"
 
 void _Wresize_window(int width,int height);
 /*:247*//*253:*/
-#line 5737 "cweb/weaver.w"
+#line 5741 "cweb/weaver.w"
 
 void _Wmove_window(int x,int y);
 /*:253*/

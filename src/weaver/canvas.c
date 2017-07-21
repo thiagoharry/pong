@@ -25,6 +25,10 @@ SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,3);
 SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,3);
 W.resolution_x= emscripten_run_script_int("window.innerWidth");
 W.resolution_y= emscripten_run_script_int("window.innerHeight");
+if(W.resolution_x<800)
+W.resolution_x= 800;
+if(W.resolution_y<600)
+W.resolution_y= 600;
 
 
 
@@ -35,12 +39,12 @@ window= SDL_SetVideoMode(
 #if W_WIDTH >  0
 W.width= W_WIDTH,
 #else
-W.width= ((W.resolution_x> 800)?(W.resolution_x):(800)),
+W.width= W.resolution_x,
 #endif
 #if W_HEIGHT >  0
 W.height= W_HEIGHT,
 #else
-W.height= ((W.resolution_y> 600)?(W.resolution_y):(600)),
+W.height= W.resolution_y,
 #endif
 0,
 SDL_OPENGL
@@ -68,7 +72,7 @@ void _finalize_canvas(void){
 SDL_FreeSurface(window);
 }
 /*250:*/
-#line 5699 "cweb/weaver.w"
+#line 5703 "cweb/weaver.w"
 
 void _Wresize_window(int width,int height){
 int old_width,old_height;
@@ -85,11 +89,11 @@ W.width= width;
 W.height= height;
 glViewport(0,0,W.width,W.height);
 /*433:*/
-#line 9470 "cweb/weaver.w"
+#line 9474 "cweb/weaver.w"
 
 _update_interface_screen_size();
 /*:433*//*475:*/
-#line 10525 "cweb/weaver.w"
+#line 10529 "cweb/weaver.w"
 
 {
 
@@ -118,20 +122,20 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
 /*:475*/
-#line 5714 "cweb/weaver.w"
+#line 5718 "cweb/weaver.w"
 
 #ifdef W_MULTITHREAD
 pthread_mutex_unlock(&_window_mutex);
 #endif
 }
 /*:250*//*256:*/
-#line 5762 "cweb/weaver.w"
+#line 5766 "cweb/weaver.w"
 
 void _Wmove_window(int width,int height){
 return;
 }
 /*:256*/
-#line 5572 "cweb/weaver.w"
+#line 5576 "cweb/weaver.w"
 
 #endif
 /*:241*/
