@@ -22,10 +22,11 @@ along with pong. If not, see <http://www.gnu.org/licenses/>.
 static bool game_ended, beginning_of_game;
 static unsigned long long end_moment;
 static int ball_old_x;
-
+static unsigned long c;
 
 MAIN_LOOP pong(void){
  LOOP_INIT:
+  c = 0;
   W.change_final_shader(5);
   game_ended = false;
   beginning_of_game = true;
@@ -38,7 +39,7 @@ MAIN_LOOP pong(void){
   initialize_danger();
   initialize_bomb();
   if(W.game -> game_completed){
-    W.final_shader_integer = 1;
+    W.final_shader_integer = 10;
     paddle1 -> integer = 10;
     paddle2 -> integer = 10;
     ball -> integer = 1;
@@ -221,16 +222,11 @@ MAIN_LOOP pong(void){
       (W.t - end_moment > 5000000))){
     if(number_of_items >= 6 && W.game -> players == 1){
       W.game -> game_completed = true;
-      W.change_final_shader(4);
-      W.final_shader_integer = 1;
-    }
-    else{
-      W.change_final_shader(4);
-      W.final_shader_integer = 0;
     }
     Wexit_loop();
   }
 
  LOOP_END:
+  printf("%ld\n", c);
   return;
 }

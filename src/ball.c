@@ -25,7 +25,7 @@ void initialize_ball(void){
   ball =  W.new_interface(BALL_SHADER,
                           W.width/2, W.height/2,
                           BALL_WIDTH, BALL_HEIGHT, // Windth and height
-                          1.0, 1.0, 1.0, 1.0);
+                          1.0, 1.0, 1.0, 1.0, NULL);
   // Ball stars with 1/2 of the speed of paddles and moves vertially:
   ball_speed = 0.5 * (float) BALL_SPEED;
   ball_dx = 1.0; ball_dy = 0.0;

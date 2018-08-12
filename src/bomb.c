@@ -24,7 +24,7 @@ void initialize_bomb(void){
                          W.width - paddle2 -> width - 2 * ball -> width,
                          W.random() % W.height,
                          BALL_WIDTH / 2, BALL_WIDTH / 2,
-                         1.0, 1.0, 1.0, 1.0);
+                         1.0, 1.0, 1.0, 1.0, NULL);
   bomb -> visible = false;
   explosion = false;
 }

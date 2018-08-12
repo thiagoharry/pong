@@ -1,9 +1,9 @@
 /*91:*/
-#line 2382 "cweb/weaver.w"
+#line 2397 "cweb/weaver.w"
 
 #include "memory.h"
 /*:91*//*98:*/
-#line 2602 "cweb/weaver.w"
+#line 2617 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 4
 void _assert__arena_header(struct _arena_header*header){
@@ -48,7 +48,7 @@ exit(1);
 }
 #endif
 /*:98*//*99:*/
-#line 2652 "cweb/weaver.w"
+#line 2667 "cweb/weaver.w"
 
 static bool _initialize_arena_header(struct _arena_header*header,
 size_t total
@@ -68,7 +68,8 @@ return false;
 #endif
 #if W_DEBUG_LEVEL >= 1
 header->line= line;
-strncpy(header->file,filename,31);
+memcpy(header->file,filename,32);
+header->file[31]= '\0';
 #endif
 #if W_DEBUG_LEVEL >= 3
 header->max_used= header->used;
@@ -79,7 +80,7 @@ _assert__arena_header(header);
 return true;
 }
 /*:99*//*104:*/
-#line 2780 "cweb/weaver.w"
+#line 2796 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 void _assert__breakpoint(struct _breakpoint*breakpoint){
@@ -106,7 +107,7 @@ exit(1);
 }
 #endif
 /*:104*//*105:*/
-#line 2812 "cweb/weaver.w"
+#line 2828 "cweb/weaver.w"
 
 static void _initialize_breakpoint(struct _breakpoint*self,
 void*last_element,
@@ -122,13 +123,14 @@ self->arena= arena;
 self->last_breakpoint= last_breakpoint;
 self->size= arena->used-sizeof(struct _breakpoint);
 #if W_DEBUG_LEVEL >= 1
-strncpy(self->file,file,32);
+memcpy(self->file,file,32);
+self->file[31]= '\0';
 self->line= line;
 _assert__breakpoint(self);
 #endif
 }
 /*:105*//*106:*/
-#line 2844 "cweb/weaver.w"
+#line 2861 "cweb/weaver.w"
 
 static void _initialize_first_breakpoint(struct _breakpoint*self,
 struct _arena_header*arena){
@@ -139,7 +141,7 @@ _initialize_breakpoint(self,self,arena,self);
 #endif
 }
 /*:106*//*111:*/
-#line 2930 "cweb/weaver.w"
+#line 2947 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 void _assert__memory_header(struct _memory_header*mem){
@@ -166,7 +168,7 @@ exit(1);
 }
 #endif
 /*:111*//*115:*/
-#line 2994 "cweb/weaver.w"
+#line 3011 "cweb/weaver.w"
 
 
 
@@ -208,7 +210,7 @@ _assert__arena_header(arena);
 return arena;
 }
 /*:115*//*121:*/
-#line 3115 "cweb/weaver.w"
+#line 3132 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 void _assert_no_memory_leak(void*arena){
@@ -230,7 +232,7 @@ p= (struct _memory_header*)p->last_element;
 }
 #endif
 /*:121*//*123:*/
-#line 3151 "cweb/weaver.w"
+#line 3168 "cweb/weaver.w"
 
 int Wdestroy_arena(void*arena){
 #if W_DEBUG_LEVEL >= 1
@@ -261,7 +263,7 @@ if(arena==NULL)return 0;
 else return 1;
 }
 /*:123*//*128:*/
-#line 3242 "cweb/weaver.w"
+#line 3259 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 void*_alloc(void*arena,size_t size,char*filename,unsigned long line){
@@ -315,7 +317,8 @@ mem_header->requested_size= size;
 mem_header->flags= 0x1;
 mem_header->arena= arena;
 #if W_DEBUG_LEVEL >= 1
-strncpy(mem_header->file,filename,32);
+memcpy(mem_header->file,filename,32);
+mem_header->file[31]= '\0';
 mem_header->line= line;
 _assert__memory_header(mem_header);
 #endif
@@ -325,7 +328,7 @@ pthread_mutex_unlock(&(header->mutex));
 return mem;
 }
 /*:128*//*132:*/
-#line 3358 "cweb/weaver.w"
+#line 3376 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 2 && !defined(W_MULTITHREAD)
 void _free(void*mem,char*filename,unsigned long line){
@@ -386,7 +389,7 @@ pthread_mutex_unlock(&(arena->mutex));
 #endif
 }
 /*:132*//*138:*/
-#line 3466 "cweb/weaver.w"
+#line 3484 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 int _new_breakpoint(void*arena,char*filename,unsigned long line){
@@ -438,7 +441,8 @@ breakpoint->arena= arena;
 breakpoint->last_breakpoint= (void*)old_breakpoint;
 breakpoint->size= old_size;
 #if W_DEBUG_LEVEL >= 1
-strncpy(breakpoint->file,filename,32);
+memcpy(breakpoint->file,filename,32);
+breakpoint->file[31]= '\0';
 breakpoint->line= line;
 #endif
 #if W_DEBUG_LEVEL >= 4
@@ -447,7 +451,7 @@ _assert__breakpoint(breakpoint);
 return 1;
 }
 /*:138*//*142:*/
-#line 3557 "cweb/weaver.w"
+#line 3576 "cweb/weaver.w"
 
 void Wtrash_arena(void*arena){
 struct _arena_header*header= (struct _arena_header*)arena;
@@ -479,15 +483,25 @@ pthread_mutex_unlock(&(header->mutex));
 #endif
 }
 /*:142*//*146:*/
-#line 3619 "cweb/weaver.w"
+#line 3638 "cweb/weaver.w"
 
-static void*_user_arena,*_internal_arena;
-/*:146*//*148:*/
-#line 3636 "cweb/weaver.w"
+void*_user_arena,*_internal_arena;
+/*:146*//*149:*/
+#line 3659 "cweb/weaver.w"
 
 void _initialize_memory(void){
 _user_arena= Wcreate_arena(W_MAX_MEMORY);
+if(_user_arena==NULL){
+fprintf(stderr,"ERROR: This system have no enough memory to "
+"run this program.\n");
+exit(1);
+}
 _internal_arena= Wcreate_arena(W_INTERNAL_MEMORY);
+if(_internal_arena==NULL){
+fprintf(stderr,"ERROR: This system have no enough memory to "
+"run this program.\n");
+exit(1);
+}
 }
 void _finalize_memory(){
 Wdestroy_arena(_user_arena);
@@ -496,8 +510,8 @@ Wdestroy_arena(_internal_arena);
 }
 
 
-/*:148*//*152:*/
-#line 3693 "cweb/weaver.w"
+/*:149*//*153:*/
+#line 3728 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 void*_Walloc(size_t size,char*filename,unsigned long line){
@@ -514,19 +528,28 @@ void*_Winternal_alloc(size_t size){
 return _alloc(_internal_arena,size);
 }
 #endif
-/*:152*//*157:*/
-#line 3752 "cweb/weaver.w"
+/*:153*//*158:*/
+#line 3790 "cweb/weaver.w"
 
 #if W_DEBUG_LEVEL >= 1
 int _Wbreakpoint(char*filename,unsigned long line){
 return _new_breakpoint(_user_arena,filename,line);
 }
+int _iWbreakpoint_(char*filename,unsigned long line){
+return _new_breakpoint(_internal_arena,filename,line);
+}
 #else
 int _Wbreakpoint(void){
 return _new_breakpoint(_user_arena);
+}
+int _iWbreakpoint_(void){
+return _new_breakpoint(_internal_arena);
 }
 #endif
 void _Wtrash(void){
 Wtrash_arena(_user_arena);
 }
-/*:157*/
+void _iWtrash(void){
+Wtrash_arena(_internal_arena);
+}
+/*:158*/

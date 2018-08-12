@@ -38,20 +38,20 @@ MAIN_LOOP title(void){
     if(y_position + 0.08 * W.height > W.height)
       y_position = W.height - 0.08 * W.height;
     pong_title = W.new_interface(TITLE_SHADER, W.width / 2, y_position,
-                                 0.3 * W.width, 0.16 * W.height);
+                                 0.3 * W.width, 0.16 * W.height, NULL);
   }
   p1 = W.new_interface(START_SHADER, W.width / 2, 0.25 * W.height,
-                         0.2 * W.width, 0.03 * W.height);
+                       0.2 * W.width, 0.03 * W.height, NULL);
   p2 = W.new_interface(START_SHADER, W.width / 2, 0.2 * W.height,
-                       0.2 * W.width, 0.03 * W.height);
+                       0.2 * W.width, 0.03 * W.height, NULL);
 #if W_TARGET == W_ELF
   quit = W.new_interface(EXIT_SHADER, W.width / 2, 0.15 * W.height,
-                         0.1 * W.width, 0.03 * W.height);
+                         0.1 * W.width, 0.03 * W.height, NULL);
 #endif
   cursor = W.new_interface(W_INTERFACE_PERIMETER,
                            W.width / 2, 0.25 * W.height,
                            0.3 * W.width, 0.04 * W.height,
-                           1.0, 1.0, 1.0, 1.0);
+                           1.0, 1.0, 1.0, 1.0, NULL);
   // Loading all the sounds here and keeping them
   collision1 = W.new_sound("collision1.wav");
   collision2 = W.new_sound("collision2.wav");
@@ -67,6 +67,7 @@ MAIN_LOOP title(void){
   p1 -> integer = 1;
   p2 -> integer = 2;
   W.change_final_shader(4);
+  W.final_shader_integer = 0;
   if(W.game -> game_completed)
     W.final_shader_integer = 1;
  LOOP_BODY:

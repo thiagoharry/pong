@@ -1,14 +1,14 @@
-/*241:*/
-#line 5513 "cweb/weaver.w"
+/*266:*/
+#line 5989 "cweb/weaver.w"
 
 /*66:*/
-#line 1913 "cweb/weaver.w"
+#line 1928 "cweb/weaver.w"
 
 #include "conf_begin.h"
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 5514 "cweb/weaver.w"
+#line 5990 "cweb/weaver.w"
 
 extern int make_iso_compilers_happy;
 #if W_TARGET == W_WEB
@@ -21,8 +21,8 @@ pthread_mutex_t _window_mutex;
 
 void _initialize_canvas(void){
 SDL_Init(SDL_INIT_VIDEO);
-SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,3);
-SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,3);
+SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,2);
+SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,0);
 W.resolution_x= emscripten_run_script_int("window.innerWidth");
 W.resolution_y= emscripten_run_script_int("window.innerHeight");
 if(W.resolution_x<800)
@@ -71,8 +71,8 @@ el.style.overflow= "hidden";
 void _finalize_canvas(void){
 SDL_FreeSurface(window);
 }
-/*250:*/
-#line 5703 "cweb/weaver.w"
+/*275:*/
+#line 6179 "cweb/weaver.w"
 
 void _Wresize_window(int width,int height){
 int old_width,old_height;
@@ -88,12 +88,12 @@ old_height= W.height;
 W.width= width;
 W.height= height;
 glViewport(0,0,W.width,W.height);
-/*433:*/
-#line 9474 "cweb/weaver.w"
+/*458:*/
+#line 9977 "cweb/weaver.w"
 
 _update_interface_screen_size();
-/*:433*//*475:*/
-#line 10529 "cweb/weaver.w"
+/*:458*//*500:*/
+#line 11054 "cweb/weaver.w"
 
 {
 
@@ -110,32 +110,28 @@ _interfaces[i][j].x*
 ((float)width)/((float)old_width),
 _interfaces[i][j].y*
 ((float)height)/((float)old_height));
-if(_interfaces[i][j].stretch_x)
 new_width= _interfaces[i][j].width*
 ((float)width/(float)old_width);
-else new_width= _interfaces[i][j].width;
-if(_interfaces[i][j].stretch_y)
 new_height= _interfaces[i][j].height*
 ((float)height/(float)old_height);
-else new_height= _interfaces[i][j].height;
 W.resize_interface(&_interfaces[i][j],new_width,new_height);
 }
 }
-/*:475*/
-#line 5718 "cweb/weaver.w"
+/*:500*/
+#line 6194 "cweb/weaver.w"
 
 #ifdef W_MULTITHREAD
 pthread_mutex_unlock(&_window_mutex);
 #endif
 }
-/*:250*//*256:*/
-#line 5766 "cweb/weaver.w"
+/*:275*//*281:*/
+#line 6242 "cweb/weaver.w"
 
 void _Wmove_window(int width,int height){
 return;
 }
-/*:256*/
-#line 5576 "cweb/weaver.w"
+/*:281*/
+#line 6052 "cweb/weaver.w"
 
 #endif
-/*:241*/
+/*:266*/

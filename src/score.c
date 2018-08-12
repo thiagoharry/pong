@@ -25,10 +25,10 @@ void initialize_score(void){
     y_position = W.height - 0.1 * W.height;
   score1 = W.new_interface(SCORE_SHADER,
                            0.375 * W.width, y_position,
-                           3 * PADDLE_WIDTH, 5 * W.height/27);
+                           3 * PADDLE_WIDTH, 5 * W.height/27, NULL);
   score2 = W.new_interface(SCORE_SHADER,
                            0.625 * W.width, y_position,
-                           3 * PADDLE_WIDTH, 0.2 * W.height);
+                           3 * PADDLE_WIDTH, 0.2 * W.height, NULL);
 
   if(W.game -> game_completed){
     score1 -> integer = 10;
@@ -38,7 +38,7 @@ void initialize_score(void){
     score1 -> integer = 0;
     score2 -> integer = 0;
   }
-  
+
 }
 
 int get_score(int score){

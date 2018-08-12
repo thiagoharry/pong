@@ -24,7 +24,7 @@ void initialize_danger(void){
                          W.width - paddle2 -> width - 2 * ball -> width,
                          W.random() % W.height,
                          BALL_WIDTH / 2, BALL_WIDTH / 2,
-                         1.0, 1.0, 1.0, 1.0);
+                           1.0, 1.0, 1.0, 1.0, NULL);
   danger -> visible = false;
 }
 
@@ -41,7 +41,7 @@ void show_danger(void){
 void get_danger(void){
   // Cloud (2), smaller paddle (8), pods, dancing screen, ondulating screen,
   // upside down screen (1), rainbow (6), new (7)
-  
+
   int danger_type = (W.random() % 8) + 1;
   W.play_sound(danger_sound);
   in_danger = true;

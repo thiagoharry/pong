@@ -42,7 +42,7 @@ static GLuint vertex_shader, fragment_shader, program, textures,
 static GLint color_position, texture_coordinate, vertex_position;
 
 void copyleft(void){
-  // The copyright symbol has 1045 vertices. No low poly here. 
+  // The copyright symbol has 1045 vertices. No low poly here.
   float vertices[] = {0.1392, -0.1186, 0.0340, 1.0, 1.0, 0.0, 0.0, 1.0,
                       0.1295, -0.1358, 0.0340, 1.0, 1.0, 0.0, 0.0, 1.0,
                       0.1180, -0.1515, 0.0340, 1.0, 1.0, 0.0, 0.0, 1.0,
@@ -582,7 +582,7 @@ void copyleft(void){
   glUniform1f(alpha_loc, 1.0);
   glUniform3f(translating_loc, 0.0, 0.0, 0.0);
   glUniform1i(render_mode_loc, 1);
-  
+
   // Initializing OpenGL background for copyleft symbol
   glGenTextures(1, &textures);
   glGenTextures(1, &second_texture);
@@ -603,7 +603,7 @@ void copyleft(void){
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, 790 * sizeof(unsigned int), indices,
                GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, 3168 * sizeof(float), vertices, GL_STATIC_DRAW);
-  
+
 
   //glBindBuffer(GL_ARRAY_BUFFER, buffers);
   vertex_position = glGetAttribLocation(program, "vPosition");
@@ -621,7 +621,7 @@ void copyleft(void){
   glEnableVertexAttribArray(vertex_position);
   glEnableVertexAttribArray(color_position);
   glEnableVertexAttribArray(texture_coordinate);
-  
+
   gettimeofday(&beginning, NULL);
   //glEnable(GL_PROGRAM_POINT_SIZE);
   state = 0;
@@ -639,7 +639,7 @@ void copyleft_loop(void){
   struct timeval now;
   unsigned long time_lapse;
   float t;
-  
+
   gettimeofday(&now, NULL);
   time_lapse = (unsigned long) ((long) (now.tv_usec - beginning.tv_usec) +
                                 (long) 1000000 *
@@ -685,7 +685,6 @@ void copyleft_loop(void){
     glDisableVertexAttribArray(vertex_position);
     glDisableVertexAttribArray(color_position);
     glDisableVertexAttribArray(texture_coordinate);
-    
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDeleteVertexArrays(1, &VAOs);
     glDeleteBuffers(1, &EBO);
@@ -707,7 +706,6 @@ void copyleft_loop(void){
     emscripten_cancel_main_loop();
 #endif
     // Cleaning the errors
-    alGetError();
     Wloop(title);
   }
 #if W_TARGET == W_ELF

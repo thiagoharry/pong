@@ -27,11 +27,11 @@ void initialize_paddle(void){
   paddle1 = W.new_interface(PADDLE_SHADER,
                             0.5 * PADDLE_WIDTH, W.height/2,
                             PADDLE_WIDTH, PADDLE_HEIGHT, // Largura e altura
-                            1.0, 1.0, 1.0, 1.0);
+                            1.0, 1.0, 1.0, 1.0, NULL);
   paddle2 = W.new_interface(PADDLE_SHADER,
                             W.width - 0.5 * PADDLE_WIDTH, W.height/2,
                             PADDLE_WIDTH, PADDLE_HEIGHT, // Largura e altura
-                            1.0, 1.0, 1.0, 1.0);
+                            1.0, 1.0, 1.0, 1.0, NULL);
   paddle1 -> r = 1.0;
   paddle1 -> g = paddle1 -> b = 0.0;
   paddle2 -> b = 1.0;
@@ -219,7 +219,7 @@ void paddle_ai(int paddle){
           end_y *= -1;
         }
         else if(end_y > (float) W.height){
-          end_y = (float) W.height - (end_y - (float) W.height); 
+          end_y = (float) W.height - (end_y - (float) W.height);
         }
       }
       if(pad -> y - pad -> height / 3 > end_y)

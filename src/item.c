@@ -24,7 +24,7 @@ void initialize_item(void){
                          W.width - paddle2 -> width - 2 * ball -> width,
                          W.random() % W.height,
                          BALL_WIDTH / 2, BALL_WIDTH / 2,
-                         1.0, 1.0, 1.0, 1.0);
+                         1.0, 1.0, 1.0, 1.0, NULL);
   // The item shouldn' appear right in the ball way
   while(item -> y > W.height / 2 - BALL_WIDTH &&
         item -> y < W.height / 2 + BALL_WIDTH){
