@@ -1,5 +1,5 @@
-/*619:*/
-#line 13127 "cweb/weaver.w"
+/*623:*/
+#line 13300 "./cweb/weaver.w"
 
 #ifndef _gif_h_
 #define _gif_h_
@@ -8,20 +8,20 @@ extern"C"{
 #endif
 #include "weaver.h"
 /*66:*/
-#line 1928 "cweb/weaver.w"
+#line 1950 "./cweb/weaver.w"
 
 #include "conf_begin.h"
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 13134 "cweb/weaver.w"
+#line 13307 "./cweb/weaver.w"
 
-/*623:*/
-#line 13155 "cweb/weaver.w"
+/*627:*/
+#line 13328 "./cweb/weaver.w"
 
 GLuint*_extract_gif(char*,unsigned*,unsigned**,int*,bool*);
-/*:623*//*640:*/
-#line 13895 "cweb/weaver.w"
+/*:627*//*644:*/
+#line 14060 "./cweb/weaver.w"
 
 struct _image_list{
 unsigned char*rgba_image;
@@ -31,11 +31,11 @@ int disposal_method;
 
 struct _image_list*next,*prev;
 };
-/*:640*/
-#line 13135 "cweb/weaver.w"
+/*:644*/
+#line 13308 "./cweb/weaver.w"
 
 #ifdef __cplusplus
 }
 #endif
 #endif
-/*:619*/
+/*:623*/

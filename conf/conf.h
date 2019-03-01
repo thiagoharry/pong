@@ -10,7 +10,7 @@
 // 1: Info about non-fatal errors will be printed
 // 2: General warnings will be printed
 // Before installing and distributing this game, set the macro to 0
-#define W_DEBUG_LEVEL 0
+#define W_DEBUG_LEVEL 2
 
 // This macro determines if we are building a native program (W_ELF) or
 // a web program to be run in a browser (W_WEB). In the first case,
@@ -47,19 +47,9 @@
 // Maximum number of instances for each Weaver Object:
 #define W_MAX_INSTANCES 100
 
-// How the objects are projected in the screen. The options are
-// W_PERSPECTIVE and W_ORTHOGONAL
-#define W_PROJECTION W_PERSPECTIVE
-// Minimal distance captured by our camera. Shouldn't be 0 when using
-// a perspective projection:
-#define W_NEAR_PLANE      0.3
-// Maximal distance captured by our camera:
-#define W_FAR_PLANE    1000.0
-// How big are the camera lens (usually an orthogonal projection needs
-// bigger lens):
-#define W_CAMERA_SIZE     0.3
-
 /* Various Limits */
 #define W_MAX_SUBLOOP 16 // Max number of subloops
 #define W_MAX_PERIODIC_FUNCTIONS 16 // Max periodic functions in a loop
 #define W_MAX_INTERFACES         16 // Max number of interface elements
+
+#define W_DISABLE_PNG

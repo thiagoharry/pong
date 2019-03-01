@@ -1,5 +1,5 @@
-/*539:*/
-#line 11739 "cweb/weaver.w"
+/*543:*/
+#line 11912 "./cweb/weaver.w"
 
 #ifndef _sound_h_
 #define _sound_h_
@@ -10,32 +10,32 @@ extern"C"{
 #include <AL/alc.h> 
 #include "weaver.h"
 /*66:*/
-#line 1928 "cweb/weaver.w"
+#line 1950 "./cweb/weaver.w"
 
 #include "conf_begin.h"
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 11748 "cweb/weaver.w"
+#line 11921 "./cweb/weaver.w"
 
-/*544:*/
-#line 11799 "cweb/weaver.w"
+/*548:*/
+#line 11972 "./cweb/weaver.w"
 
 void _initialize_sound(void);
-/*:544*//*546:*/
-#line 11818 "cweb/weaver.w"
+/*:548*//*550:*/
+#line 11991 "./cweb/weaver.w"
 
 void _finalize_sound(void);
-/*:546*//*556:*/
-#line 11945 "cweb/weaver.w"
+/*:550*//*560:*/
+#line 12118 "./cweb/weaver.w"
 
 bool _select_sound_device(int position);
-/*:556*//*560:*/
-#line 11978 "cweb/weaver.w"
+/*:560*//*564:*/
+#line 12151 "./cweb/weaver.w"
 
 int _current_sound_device(void);
-/*:560*//*588:*/
-#line 12573 "cweb/weaver.w"
+/*:564*//*592:*/
+#line 12746 "./cweb/weaver.w"
 
 struct sound{
 unsigned long size;
@@ -43,29 +43,30 @@ int channels,freq,bitrate;
 ALuint _data;
 bool loaded;
 };
-/*:588*//*589:*/
-#line 12590 "cweb/weaver.w"
+/*:592*//*593:*/
+#line 12763 "./cweb/weaver.w"
 
 struct sound*_new_sound(char*filename);
-/*:589*//*597:*/
-#line 12788 "cweb/weaver.w"
+/*:593*//*601:*/
+#line 12961 "./cweb/weaver.w"
 
 void _play_sound(struct sound*snd);
-/*:597*//*601:*/
-#line 12823 "cweb/weaver.w"
+/*:601*//*605:*/
+#line 12996 "./cweb/weaver.w"
 
 void _destroy_sound(struct sound*snd);
-/*:601*//*760:*/
-#line 16804 "cweb/weaver.w"
+/*:605*//*764:*/
+#line 16974 "./cweb/weaver.w"
 
 #if W_TARGET == W_ELF
+#include <pthread.h> 
 #include <semaphore.h> 
 #ifndef W_DISABLE_MP3
 #include <mpg123.h> 
 #endif
 #endif
-/*:760*//*762:*/
-#line 16832 "cweb/weaver.w"
+/*:764*//*766:*/
+#line 17003 "./cweb/weaver.w"
 
 struct _music_data{
 char filename[W_MAX_SUBLOOP][256];
@@ -86,8 +87,8 @@ mpg123_handle*mpg_handle;
 ALuint sound_source,openal_buffer[2];
 #endif
 };
-/*:762*//*763:*/
-#line 16856 "cweb/weaver.w"
+/*:766*//*767:*/
+#line 17027 "./cweb/weaver.w"
 
 extern struct _music_data _music[W_MAX_MUSIC];
 #ifdef W_MULTITHREAD
@@ -95,47 +96,52 @@ extern struct _music_data _music[W_MAX_MUSIC];
 
 extern pthread_mutex_t _music_mutex;
 #endif
-/*:763*//*765:*/
-#line 16876 "cweb/weaver.w"
+/*:767*//*769:*/
+#line 17047 "./cweb/weaver.w"
 
 #define _NOT_LOADED 0
 #define _PLAYING    1
 #define _PAUSED     2
-/*:765*//*770:*/
-#line 16988 "cweb/weaver.w"
+#define _CLOSED     3 
+/*:769*//*774:*/
+#line 17160 "./cweb/weaver.w"
 
 bool _play_music(char*,bool);
-/*:770*//*774:*/
-#line 17067 "cweb/weaver.w"
+/*:774*//*778:*/
+#line 17249 "./cweb/weaver.w"
 
 bool _pause_music(char*);
-/*:774*//*778:*/
-#line 17122 "cweb/weaver.w"
+/*:778*//*782:*/
+#line 17304 "./cweb/weaver.w"
 
 bool _resume_music(char*);
-/*:778*//*780:*/
-#line 17167 "cweb/weaver.w"
+/*:782*//*784:*/
+#line 17349 "./cweb/weaver.w"
 
 bool _stop_music(char*);
-/*:780*//*784:*/
-#line 17225 "cweb/weaver.w"
+/*:784*//*788:*/
+#line 17408 "./cweb/weaver.w"
+
+bool _close_music(void);
+/*:788*//*790:*/
+#line 17444 "./cweb/weaver.w"
 
 float _get_volume(char*);
-/*:784*//*788:*/
-#line 17258 "cweb/weaver.w"
+/*:790*//*794:*/
+#line 17477 "./cweb/weaver.w"
 
 float _increase_volume(char*,float);
-/*:788*//*798:*/
-#line 17496 "cweb/weaver.w"
+/*:794*//*804:*/
+#line 17707 "./cweb/weaver.w"
 
 #if W_TARGET == W_ELF && !defined(W_DISABLE_MP3)
 void*_music_thread(void*);
 #endif
-/*:798*/
-#line 11749 "cweb/weaver.w"
+/*:804*/
+#line 11922 "./cweb/weaver.w"
 
 #ifdef __cplusplus
 }
 #endif
 #endif
-/*:539*/
+/*:543*/
