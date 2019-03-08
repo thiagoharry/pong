@@ -1,14 +1,14 @@
 /*818:*/
-#line 18125 "./cweb/weaver.w"
+#line 18143 "./cweb/weaver.w"
 
 #include "weaver.h"
 #include <stdarg.h> 
 /*872:*/
-#line 19417 "./cweb/weaver.w"
+#line 19435 "./cweb/weaver.w"
 
 #define HINT_ENDGROUP      1
 /*:872*//*878:*/
-#line 19522 "./cweb/weaver.w"
+#line 19540 "./cweb/weaver.w"
 
 #define NOT_DECLARED -1
 #define BOOLEAN       0
@@ -20,26 +20,26 @@
 #define TRANSFORM     6
 #define PAIR          7
 /*:878*//*916:*/
-#line 20586 "./cweb/weaver.w"
+#line 20604 "./cweb/weaver.w"
 
 #define MACRO 8
 /*:916*//*933:*/
-#line 21315 "./cweb/weaver.w"
+#line 21333 "./cweb/weaver.w"
 
 #define INTERNAL 9
 /*:933*/
-#line 18128 "./cweb/weaver.w"
+#line 18146 "./cweb/weaver.w"
 
 /*821:*/
-#line 18144 "./cweb/weaver.w"
+#line 18162 "./cweb/weaver.w"
 
 
 /*:821*//*825:*/
-#line 18180 "./cweb/weaver.w"
+#line 18198 "./cweb/weaver.w"
 
 static void*metafont_arena;
 /*:825*//*830:*/
-#line 18237 "./cweb/weaver.w"
+#line 18255 "./cweb/weaver.w"
 
 struct metafont{
 char filename[256];
@@ -50,51 +50,51 @@ int line;
 bool error;
 struct metafont*parent,*child;
 /*845:*/
-#line 18795 "./cweb/weaver.w"
+#line 18813 "./cweb/weaver.w"
 
 struct token*pending_tokens,*past_tokens;
 /*:845*//*854:*/
-#line 19018 "./cweb/weaver.w"
+#line 19036 "./cweb/weaver.w"
 
 struct _trie*internal_quantities;
 /*:854*//*860:*/
-#line 19230 "./cweb/weaver.w"
+#line 19248 "./cweb/weaver.w"
 
 char*everyjob_token_name;
 /*:860*//*869:*/
-#line 19399 "./cweb/weaver.w"
+#line 19417 "./cweb/weaver.w"
 
 int hint;
 /*:869*//*879:*/
-#line 19540 "./cweb/weaver.w"
+#line 19558 "./cweb/weaver.w"
 
 struct _trie*variable_types;
 /*:879*//*881:*/
-#line 19557 "./cweb/weaver.w"
+#line 19575 "./cweb/weaver.w"
 
 struct _trie*vars[8];
 /*:881*//*887:*/
-#line 19693 "./cweb/weaver.w"
+#line 19711 "./cweb/weaver.w"
 
 struct _trie*delimiters;
 /*:887*//*892:*/
-#line 19781 "./cweb/weaver.w"
+#line 19799 "./cweb/weaver.w"
 
 struct _trie*outer_tokens;
 /*:892*//*896:*/
-#line 19907 "./cweb/weaver.w"
+#line 19925 "./cweb/weaver.w"
 
 struct _trie*def,*vardef,*primarydef,*secondarydef,*tertiarydef;
 /*:896*//*907:*/
-#line 20271 "./cweb/weaver.w"
+#line 20289 "./cweb/weaver.w"
 
 struct _trie*macros;
 /*:907*/
-#line 18246 "./cweb/weaver.w"
+#line 18264 "./cweb/weaver.w"
 
 };
 /*:830*//*839:*/
-#line 18497 "./cweb/weaver.w"
+#line 18515 "./cweb/weaver.w"
 
 
 #define NUMERIC 1
@@ -105,25 +105,25 @@ int type;
 float value;
 char*name;
 /*936:*/
-#line 21520 "./cweb/weaver.w"
+#line 21538 "./cweb/weaver.w"
 
 bool deterministic;
 int known;
 /*:936*//*958:*/
-#line 21964 "./cweb/weaver.w"
+#line 21982 "./cweb/weaver.w"
 
 float value2;
 /*:958*/
-#line 18506 "./cweb/weaver.w"
+#line 18524 "./cweb/weaver.w"
 
 struct token*prev,*next;
 };
 /*:839*//*899:*/
-#line 19964 "./cweb/weaver.w"
+#line 19982 "./cweb/weaver.w"
 
 static struct _trie*primitive_sparks;
 /*:899*//*905:*/
-#line 20246 "./cweb/weaver.w"
+#line 20264 "./cweb/weaver.w"
 
 
 #define PRIMARY    4
@@ -133,25 +133,25 @@ static struct _trie*primitive_sparks;
 #define SUFFIX     9
 #define TEXT      10
 /*:905*//*906:*/
-#line 20261 "./cweb/weaver.w"
+#line 20279 "./cweb/weaver.w"
 
 struct macro{
 struct token*parameters;
 struct token*replacement_text;
 };
 /*:906*//*910:*/
-#line 20358 "./cweb/weaver.w"
+#line 20376 "./cweb/weaver.w"
 
 #define UNDELIMITED_EXPR   11
 #define UNDELIMITED_SUFFIX 12
 #define UNDELIMITED_TEXT   13
 /*:910*//*917:*/
-#line 20598 "./cweb/weaver.w"
+#line 20616 "./cweb/weaver.w"
 
 
 #define VARDEF_ARG 11
 /*:917*//*930:*/
-#line 21117 "./cweb/weaver.w"
+#line 21135 "./cweb/weaver.w"
 
 struct string_variable{
 char*name;
@@ -159,44 +159,44 @@ bool deterministic;
 struct string_variable*prev,*next;
 };
 /*:930*//*957:*/
-#line 21955 "./cweb/weaver.w"
+#line 21973 "./cweb/weaver.w"
 
 
 
 /*:957*/
-#line 18129 "./cweb/weaver.w"
+#line 18147 "./cweb/weaver.w"
 
 /*884:*/
-#line 19606 "./cweb/weaver.w"
+#line 19624 "./cweb/weaver.w"
 
 struct metafont*get_scope(struct metafont*mf,char*type_name);
 /*:884*//*925:*/
-#line 20946 "./cweb/weaver.w"
+#line 20964 "./cweb/weaver.w"
 
 static struct token*eval(struct metafont**,struct token**);
 static struct token*eval_string(struct metafont**,struct token**);
 static struct token*eval_numeric(struct metafont**,struct token**);
 /*:925*//*971:*/
-#line 22284 "./cweb/weaver.w"
+#line 22302 "./cweb/weaver.w"
 
 static void expand_macro(struct metafont*,struct macro*,struct token**);
 /*:971*//*981:*/
-#line 22766 "./cweb/weaver.w"
+#line 22784 "./cweb/weaver.w"
 
 static void remove_string_variable_from_equalty_list(void*string_var);
 /*:981*//*983:*/
-#line 22786 "./cweb/weaver.w"
+#line 22804 "./cweb/weaver.w"
 
 static void end_scope(struct metafont*mf);
 /*:983*/
-#line 18130 "./cweb/weaver.w"
+#line 18148 "./cweb/weaver.w"
 
 /*822:*/
-#line 18148 "./cweb/weaver.w"
+#line 18166 "./cweb/weaver.w"
 
 
 /*:822*//*834:*/
-#line 18330 "./cweb/weaver.w"
+#line 18348 "./cweb/weaver.w"
 
 char read_char(struct metafont*mf){
 char ret;
@@ -227,7 +227,7 @@ mf->line++;
 return ret;
 }
 /*:834*//*835:*/
-#line 18365 "./cweb/weaver.w"
+#line 18383 "./cweb/weaver.w"
 
 char peek_char(struct metafont*mf){
 char ret;
@@ -252,7 +252,7 @@ return'\0';
 return ret;
 }
 /*:835*//*836:*/
-#line 18395 "./cweb/weaver.w"
+#line 18413 "./cweb/weaver.w"
 
 void mf_error(struct metafont*mf,char*message,...){
 va_list args;
@@ -276,7 +276,7 @@ mf->buffer[mf->buffer_position]= '\0';
 va_end(args);
 }
 /*:836*//*837:*/
-#line 18422 "./cweb/weaver.w"
+#line 18440 "./cweb/weaver.w"
 
 void mf_end(struct metafont*mf){
 
@@ -289,17 +289,17 @@ mf->fp= NULL;
 mf->buffer_position= 0;
 mf->buffer[mf->buffer_position]= '\0';
 /*867:*/
-#line 19365 "./cweb/weaver.w"
+#line 19383 "./cweb/weaver.w"
 
 if(mf->parent!=NULL){
 mf_error(mf,"A group begun and never ended.");
 }
 /*:867*/
-#line 18433 "./cweb/weaver.w"
+#line 18451 "./cweb/weaver.w"
 
 }
 /*:837*//*840:*/
-#line 18522 "./cweb/weaver.w"
+#line 18540 "./cweb/weaver.w"
 
 static struct token*new_token(int type,float value,char*name,
 void*memory_arena){
@@ -321,16 +321,16 @@ else
 token->name= name;
 token->prev= token->next= NULL;
 /*937:*/
-#line 21528 "./cweb/weaver.w"
+#line 21546 "./cweb/weaver.w"
 
 token->deterministic= true;
 token->known= 0;
 /*:937*//*959:*/
-#line 21970 "./cweb/weaver.w"
+#line 21988 "./cweb/weaver.w"
 
 token->value2= 0.0;
 /*:959*/
-#line 18542 "./cweb/weaver.w"
+#line 18560 "./cweb/weaver.w"
 
 return token;
 error_no_memory:
@@ -345,7 +345,7 @@ return NULL;
 #define new_token_string(a) new_token(STRING, 0.0, a, _internal_arena)
 #define new_token_symbol(a) new_token(SYMBOL, 0.0, a, _internal_arena)
 /*:840*//*841:*/
-#line 18560 "./cweb/weaver.w"
+#line 18578 "./cweb/weaver.w"
 
 #ifdef W_DEBUG_METAFONT
 void debug_token_list(struct token*list){
@@ -371,7 +371,7 @@ tok= tok->next;
 }
 #endif
 /*:841*//*842:*/
-#line 18592 "./cweb/weaver.w"
+#line 18610 "./cweb/weaver.w"
 
 static struct token*next_token(struct metafont*mf){
 char buffer[512];
@@ -500,7 +500,7 @@ buffer[buffer_position]= '\0';
 return new_token_symbol(buffer);
 }
 /*:842*//*843:*/
-#line 18727 "./cweb/weaver.w"
+#line 18745 "./cweb/weaver.w"
 
 
 static void concat_token(struct token**before,struct token*after){
@@ -517,10 +517,10 @@ head->next= after;
 after->prev= head;
 }
 /*:843*//*847:*/
-#line 18811 "./cweb/weaver.w"
+#line 18829 "./cweb/weaver.w"
 
 /*851:*/
-#line 18983 "./cweb/weaver.w"
+#line 19001 "./cweb/weaver.w"
 
 bool expand_token(struct metafont*mf,struct token**first_token){
 
@@ -529,7 +529,7 @@ bool expand_token(struct metafont*mf,struct token**first_token){
 return false;
 }
 /*:851*/
-#line 18812 "./cweb/weaver.w"
+#line 18830 "./cweb/weaver.w"
 
 static struct token*get_token(struct metafont*mf){
 struct token*first_token= NULL;
@@ -547,7 +547,7 @@ while(expand_token(mf,&first_token));
 return first_token;
 }
 /*:847*//*848:*/
-#line 18832 "./cweb/weaver.w"
+#line 18850 "./cweb/weaver.w"
 
 static struct token*get_statement(struct metafont*mf){
 struct token*first_token,*current_token;
@@ -593,7 +593,7 @@ concat_token(&(mf->pending_tokens),current_token->next);
 }
 current_token->next= NULL;
 /*876:*/
-#line 19486 "./cweb/weaver.w"
+#line 19504 "./cweb/weaver.w"
 
 {
 struct token*aux= current_token;
@@ -610,7 +610,7 @@ aux= aux->prev;
 }
 }
 /*:876*/
-#line 18876 "./cweb/weaver.w"
+#line 18894 "./cweb/weaver.w"
 
 return first_token;
 source_incomplete_or_with_error:
@@ -619,7 +619,7 @@ printf("current: %s first: %s\n",current_token->name,first_token->name);
 return NULL;
 }
 /*:848*//*857:*/
-#line 19158 "./cweb/weaver.w"
+#line 19176 "./cweb/weaver.w"
 
 static struct token*symbolic_token_list(struct metafont*mf,
 struct token**token){
@@ -649,7 +649,7 @@ current_token= current_token->next;
 }
 }
 /*:857*//*885:*/
-#line 19616 "./cweb/weaver.w"
+#line 19634 "./cweb/weaver.w"
 
 struct metafont*get_scope(struct metafont*mf,char*type_name){
 
@@ -691,7 +691,7 @@ scope= scope->parent;
 return last_scope;
 }
 /*:885*//*890:*/
-#line 19747 "./cweb/weaver.w"
+#line 19765 "./cweb/weaver.w"
 
 static char*delimiter(struct metafont*mf,struct token*tok){
 char*result= NULL;
@@ -706,7 +706,7 @@ mf= mf->parent;
 return NULL;
 }
 /*:890*//*898:*/
-#line 19921 "./cweb/weaver.w"
+#line 19939 "./cweb/weaver.w"
 
 static bool is_tag(struct metafont*mf,struct token*token){
 struct metafont*scope= mf;
@@ -744,7 +744,7 @@ else
 return true;
 }
 /*:898*//*901:*/
-#line 20014 "./cweb/weaver.w"
+#line 20032 "./cweb/weaver.w"
 
 void declared_variable(struct metafont*mf,struct token**token,
 char*dst,size_t dst_size){
@@ -818,7 +818,7 @@ first_token->prev->next= current_token->next;
 return;
 }
 /*:901*//*909:*/
-#line 20292 "./cweb/weaver.w"
+#line 20310 "./cweb/weaver.w"
 
 static struct token*delimited_parameters(struct metafont*mf,
 struct token**token,
@@ -881,7 +881,7 @@ fprintf(stderr,"ERROR: Not enough memory. Please, increase"
 return NULL;
 }
 /*:909*//*911:*/
-#line 20364 "./cweb/weaver.w"
+#line 20382 "./cweb/weaver.w"
 
 static struct token*undelimited_parameters(struct metafont*mf,
 struct token**token,
@@ -914,7 +914,7 @@ return NULL;
 return new_token(type,0.0,tok->name,arena);
 }
 /*:911*//*912:*/
-#line 20418 "./cweb/weaver.w"
+#line 20436 "./cweb/weaver.w"
 
 static struct token*replacement_text(struct metafont*mf,struct token**token,
 void*arena){
@@ -987,7 +987,7 @@ mf->hint= 0;
 return result;
 }
 /*:912*//*931:*/
-#line 21139 "./cweb/weaver.w"
+#line 21157 "./cweb/weaver.w"
 
 void new_defined_string_variable(char*var_name,char*type_name,
 struct token*string_token,
@@ -1117,7 +1117,7 @@ fprintf(stderr,"ERROR: Not enough memory. Please, increase "
 exit(1);
 }
 /*:931*//*934:*/
-#line 21319 "./cweb/weaver.w"
+#line 21337 "./cweb/weaver.w"
 
 void variable(struct metafont**mf,struct token**token,
 char*dst,int dst_size,
@@ -1287,7 +1287,7 @@ old_token->next= *token;
 return;
 }
 /*:934*//*935:*/
-#line 21494 "./cweb/weaver.w"
+#line 21512 "./cweb/weaver.w"
 
 struct token*read_var(char*var_name,char*type_name,struct metafont*mf){
 struct metafont*scope= mf;
@@ -1310,7 +1310,7 @@ return ret;
 return NULL;
 }
 /*:935*//*951:*/
-#line 21771 "./cweb/weaver.w"
+#line 21789 "./cweb/weaver.w"
 
 void number2utf8(uint32_t number,char*result){
 int endian_probe_x= 1;
@@ -1369,7 +1369,7 @@ return;
 }
 }
 /*:951*//*952:*/
-#line 21837 "./cweb/weaver.w"
+#line 21855 "./cweb/weaver.w"
 
 struct token*numeric_primary(struct metafont**mf,struct token**token){
 struct token*result;
@@ -1392,7 +1392,7 @@ mf_error(*mf,"ERROR: Unknown numeric primary.");
 return NULL;
 }
 /*:952*//*960:*/
-#line 21986 "./cweb/weaver.w"
+#line 22004 "./cweb/weaver.w"
 
 struct token*pair_primary(struct metafont**mf,struct token**token){
 struct token*result,*tok= *token;
@@ -1454,7 +1454,7 @@ mf_error(*mf,"ERROR: Unknown numeric primary.");
 return NULL;
 }
 /*:960*//*972:*/
-#line 22287 "./cweb/weaver.w"
+#line 22305 "./cweb/weaver.w"
 
 static void expand_macro(struct metafont*mf,struct macro*mc,
 struct token**tok){
@@ -1464,7 +1464,7 @@ replacement= mc->replacement_text;
 struct token*arg= mc->parameters;
 while(arg!=NULL){
 /*975:*/
-#line 22416 "./cweb/weaver.w"
+#line 22434 "./cweb/weaver.w"
 
 {
 
@@ -1482,7 +1482,7 @@ concat_token(&(arg->prev),*tok);
 }
 }
 /*986:*/
-#line 22830 "./cweb/weaver.w"
+#line 22848 "./cweb/weaver.w"
 
 else if(arg->type==EXPR){
 struct token*begin_delim,*end_delim;
@@ -1528,18 +1528,18 @@ end_delim->next->prev= begin_delim->prev;
 }
 }
 /*:986*/
-#line 22432 "./cweb/weaver.w"
+#line 22450 "./cweb/weaver.w"
 
 }
 /*:975*/
-#line 22295 "./cweb/weaver.w"
+#line 22313 "./cweb/weaver.w"
 
 arg= arg->next;
 }
 }
 while(replacement!=NULL){
 /*973:*/
-#line 22352 "./cweb/weaver.w"
+#line 22370 "./cweb/weaver.w"
 
 {
 struct token*arg= mc->parameters;
@@ -1581,7 +1581,7 @@ if(arg!=NULL)
 continue;
 }
 /*:973*/
-#line 22300 "./cweb/weaver.w"
+#line 22318 "./cweb/weaver.w"
 
 if(current_token!=NULL){
 current_token->next= new_token(replacement->type,
@@ -1617,7 +1617,7 @@ if(expansion!=NULL)
 *tok= expansion;
 }
 /*974:*/
-#line 22397 "./cweb/weaver.w"
+#line 22415 "./cweb/weaver.w"
 
 {
 struct token*arg= mc->parameters;
@@ -1630,7 +1630,7 @@ arg= arg->next;
 }
 }
 /*:974*/
-#line 22334 "./cweb/weaver.w"
+#line 22352 "./cweb/weaver.w"
 
 return;
 error_no_memory:
@@ -1639,7 +1639,7 @@ fprintf(stderr,"ERROR: Not enough memory. Please increase the value of "
 exit(1);
 }
 /*:972*//*979:*/
-#line 22497 "./cweb/weaver.w"
+#line 22515 "./cweb/weaver.w"
 
 static void equal_variables(struct metafont*mf,char*name1,char*name2,
 char*declared1,char*declared2,
@@ -1749,7 +1749,7 @@ return;
 }
 }
 /*:979*//*982:*/
-#line 22770 "./cweb/weaver.w"
+#line 22788 "./cweb/weaver.w"
 
 static void remove_string_variable_from_equalty_list(void*string_var){
 struct string_variable*string= (struct string_variable*)string_var;
@@ -1759,19 +1759,19 @@ if(string->next!=NULL)
 string->next->prev= string->prev;
 }
 /*:982*//*984:*/
-#line 22790 "./cweb/weaver.w"
+#line 22808 "./cweb/weaver.w"
 
 static void end_scope(struct metafont*mf){
 _map_trie(remove_string_variable_from_equalty_list,mf->vars[STRING]);
 }
 /*:984*/
-#line 18131 "./cweb/weaver.w"
+#line 18149 "./cweb/weaver.w"
 
 /*926:*/
-#line 20952 "./cweb/weaver.w"
+#line 20970 "./cweb/weaver.w"
 
 /*932:*/
-#line 21291 "./cweb/weaver.w"
+#line 21309 "./cweb/weaver.w"
 
 static struct token*eval_numeric(struct metafont**mf,
 struct token**expression){
@@ -1785,10 +1785,10 @@ ret->prev->next= ret->next;
 return ret;
 }
 /*:932*/
-#line 20953 "./cweb/weaver.w"
+#line 20971 "./cweb/weaver.w"
 
 /*927:*/
-#line 21030 "./cweb/weaver.w"
+#line 21048 "./cweb/weaver.w"
 
 static struct token*eval_string(struct metafont**mf,
 struct token**expression){
@@ -1808,7 +1808,7 @@ strcmp(current_token->name,",")&&
 strcmp(current_token->name,":=")))&&
 (!delimited||strcmp(current_token->name,delim))){
 /*938:*/
-#line 21536 "./cweb/weaver.w"
+#line 21554 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL){
 char variable_name[1024],type_name[1024];
@@ -1858,7 +1858,7 @@ possible_var->next= current_token;
 }
 }
 /*:938*//*941:*/
-#line 21598 "./cweb/weaver.w"
+#line 21616 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"jobname")){
@@ -1876,7 +1876,7 @@ if(current_token->next!=NULL)
 current_token->next->prev= NULL;
 }
 /*:941*//*943:*/
-#line 21623 "./cweb/weaver.w"
+#line 21641 "./cweb/weaver.w"
 
 {
 char*current_delim= delimiter(*mf,current_token);
@@ -1885,7 +1885,7 @@ eval_string(mf,&current_token);
 }
 }
 /*:943*//*945:*/
-#line 21637 "./cweb/weaver.w"
+#line 21655 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"begingroup")){
@@ -1893,7 +1893,7 @@ eval(mf,&current_token);
 return NULL;
 }
 /*:945*//*947:*/
-#line 21650 "./cweb/weaver.w"
+#line 21668 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"readstring")){
@@ -1922,7 +1922,7 @@ if(token->next!=NULL)
 token->next->prev= token;
 }
 /*:947*//*949:*/
-#line 21686 "./cweb/weaver.w"
+#line 21704 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"str")){
@@ -1988,7 +1988,7 @@ new_result->next->prev= new_result;
 current_token= new_result;
 }
 /*:949*//*953:*/
-#line 21862 "./cweb/weaver.w"
+#line 21880 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"char")){
@@ -2022,7 +2022,7 @@ else
 *expression= result;
 }
 /*:953*//*955:*/
-#line 21904 "./cweb/weaver.w"
+#line 21922 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"decimal")){
@@ -2065,7 +2065,7 @@ else
 *expression= result;
 }
 /*:955*//*961:*/
-#line 22057 "./cweb/weaver.w"
+#line 22075 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"substring")){
@@ -2083,7 +2083,7 @@ if(current_token!=NULL)
 current_token->prev= pair;
 }
 /*:961*//*962:*/
-#line 22085 "./cweb/weaver.w"
+#line 22103 "./cweb/weaver.w"
 
 while(current_token!=NULL&&current_token->prev!=NULL&&
 current_token->prev->prev!=NULL&&
@@ -2156,7 +2156,7 @@ result->next->prev= result;
 current_token= result;
 }
 /*:962*/
-#line 21048 "./cweb/weaver.w"
+#line 21066 "./cweb/weaver.w"
 
 current_token= current_token->next;
 }
@@ -2172,7 +2172,7 @@ strcmp(current_token->name,",")&&
 strcmp(current_token->name,":=")))&&
 (!delimited||strcmp(current_token->name,delim))){
 /*965:*/
-#line 22170 "./cweb/weaver.w"
+#line 22188 "./cweb/weaver.w"
 
 if(current_token->type==SYMBOL&&
 !strcmp(current_token->name,"&")){
@@ -2216,7 +2216,7 @@ result->next->prev= result;
 current_token= result;
 }
 /*:965*/
-#line 21062 "./cweb/weaver.w"
+#line 21080 "./cweb/weaver.w"
 
 current_token= current_token->next;
 }
@@ -2245,7 +2245,7 @@ exit(1);
 
 }
 /*:927*/
-#line 20954 "./cweb/weaver.w"
+#line 20972 "./cweb/weaver.w"
 
 struct token*eval(struct metafont**mf,struct token**expression){
 struct token*aux= *expression;
@@ -2317,13 +2317,13 @@ mf_error(*mf,"Undetermined expression.");
 return NULL;
 }
 /*:926*/
-#line 18132 "./cweb/weaver.w"
+#line 18150 "./cweb/weaver.w"
 
 /*849:*/
-#line 18889 "./cweb/weaver.w"
+#line 18907 "./cweb/weaver.w"
 
 /*850:*/
-#line 18925 "./cweb/weaver.w"
+#line 18943 "./cweb/weaver.w"
 
 void run_single_statement(struct metafont**mf,struct token*statement){
 #ifdef W_DEBUG_METAFONT
@@ -2363,7 +2363,7 @@ printf("\n");
 if(statement->type==SYMBOL&&!strcmp(statement->name,";"))
 return;
 /*873:*/
-#line 19425 "./cweb/weaver.w"
+#line 19443 "./cweb/weaver.w"
 
 {
 struct token*aux= statement;
@@ -2386,10 +2386,10 @@ aux= aux->next;
 }
 }
 /*:873*/
-#line 18963 "./cweb/weaver.w"
+#line 18981 "./cweb/weaver.w"
 
 /*858:*/
-#line 19192 "./cweb/weaver.w"
+#line 19210 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&!strcmp(statement->name,"newinternal")){
 struct token*current_token= statement->next;
@@ -2409,7 +2409,7 @@ list= list->next;
 return;
 }
 /*:858*//*862:*/
-#line 19243 "./cweb/weaver.w"
+#line 19261 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&!strcmp(statement->name,"everyjob")){
 
@@ -2440,7 +2440,7 @@ strlen(statement->next->name)+1);
 return;
 }
 /*:862*//*865:*/
-#line 19305 "./cweb/weaver.w"
+#line 19323 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&
 (!strcmp(statement->name,"batchmode")||
@@ -2456,7 +2456,7 @@ return;
 return;
 }
 /*:865*//*868:*/
-#line 19376 "./cweb/weaver.w"
+#line 19394 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&!strcmp(statement->name,"begingroup")){
 Wbreakpoint_arena(metafont_arena);
@@ -2470,7 +2470,7 @@ concat_token(&((*mf)->pending_tokens),
 return;
 }
 /*:868*//*883:*/
-#line 19573 "./cweb/weaver.w"
+#line 19591 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&!strcmp(statement->name,"save")){
 struct token*current_token= statement->next;
@@ -2497,7 +2497,7 @@ list= list->next;
 return;
 }
 /*:883*//*889:*/
-#line 19704 "./cweb/weaver.w"
+#line 19722 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&!strcmp(statement->name,"delimiters")){
 char*end_delimiter;
@@ -2537,7 +2537,7 @@ return;
 return;
 }
 /*:889*//*894:*/
-#line 19791 "./cweb/weaver.w"
+#line 19809 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&
 (!strcmp(statement->name,"inner")||
@@ -2566,7 +2566,7 @@ list= list->next;
 return;
 }
 /*:894*//*902:*/
-#line 20090 "./cweb/weaver.w"
+#line 20108 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&
 (!strcmp(statement->name,"boolean")||
@@ -2660,7 +2660,7 @@ return;
 return;
 }
 /*:902*//*913:*/
-#line 20494 "./cweb/weaver.w"
+#line 20512 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&!strcmp(statement->name,"def")){
 char*name;
@@ -2718,7 +2718,7 @@ return;
 return;
 }
 /*:913*//*918:*/
-#line 20607 "./cweb/weaver.w"
+#line 20625 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&!strcmp(statement->name,"vardef")){
 struct macro*new_macro;
@@ -2798,7 +2798,7 @@ return;
 return;
 }
 /*:918*//*921:*/
-#line 20720 "./cweb/weaver.w"
+#line 20738 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&
 (!strcmp(statement->name,"primarydef")||
@@ -2911,7 +2911,7 @@ return;
 return;
 }
 /*:921*//*968:*/
-#line 22240 "./cweb/weaver.w"
+#line 22258 "./cweb/weaver.w"
 
 if(statement->type==SYMBOL&&(!strcmp(statement->name,"message")||
 !strcmp(statement->name,"errmessage")||
@@ -2938,7 +2938,7 @@ fprintf(stderr,"%s\n",expr_result->name);
 return;
 }
 /*:968*//*980:*/
-#line 22651 "./cweb/weaver.w"
+#line 22669 "./cweb/weaver.w"
 
 {
 struct token*tok= statement,*last_separator= NULL;
@@ -3044,10 +3044,10 @@ if(found_equation_or_attribution)
 return;
 }
 /*:980*/
-#line 18964 "./cweb/weaver.w"
+#line 18982 "./cweb/weaver.w"
 
 /*924:*/
-#line 20902 "./cweb/weaver.w"
+#line 20920 "./cweb/weaver.w"
 
 {
 struct token*new_tokens= NULL;
@@ -3086,7 +3086,7 @@ mf_error(*mf,"Missing ';' after title.");
 return;
 }
 /*:924*/
-#line 18965 "./cweb/weaver.w"
+#line 18983 "./cweb/weaver.w"
 
 mf_error(*mf,"Isolated expression. I couldn't find a = or := after it.");
 return;
@@ -3100,7 +3100,7 @@ fprintf(stderr,"ERROR: Not enough memory. Please, increase the "
 exit(1);
 }
 /*:850*/
-#line 18890 "./cweb/weaver.w"
+#line 18908 "./cweb/weaver.w"
 
 void run_statements(struct metafont*mf){
 struct token*statement;
@@ -3110,21 +3110,21 @@ if(mf->pending_tokens==NULL&&mf->parent==NULL)
 _iWbreakpoint();
 if(first_loop){
 /*863:*/
-#line 19278 "./cweb/weaver.w"
+#line 19296 "./cweb/weaver.w"
 
 if(mf->everyjob_token_name!=NULL)
 mf->pending_tokens= new_token_symbol(mf->everyjob_token_name);
 /*:863*/
-#line 18898 "./cweb/weaver.w"
+#line 18916 "./cweb/weaver.w"
 
 first_loop= false;
 }
 /*871:*/
-#line 19410 "./cweb/weaver.w"
+#line 19428 "./cweb/weaver.w"
 
 mf->hint= 0;
 /*:871*/
-#line 18901 "./cweb/weaver.w"
+#line 18919 "./cweb/weaver.w"
 
 statement= get_statement(mf);
 if(statement==NULL)
@@ -3133,7 +3133,7 @@ else{
 run_single_statement(&mf,statement);
 }
 /*874:*/
-#line 19450 "./cweb/weaver.w"
+#line 19468 "./cweb/weaver.w"
 
 if(mf->hint==HINT_ENDGROUP){
 
@@ -3147,13 +3147,13 @@ Wtrash_arena(metafont_arena);
 }
 }
 /*:874*/
-#line 18908 "./cweb/weaver.w"
+#line 18926 "./cweb/weaver.w"
 
 if(mf->pending_tokens==NULL&&mf->parent==NULL)
 _iWtrash();
 }
 /*875:*/
-#line 19468 "./cweb/weaver.w"
+#line 19486 "./cweb/weaver.w"
 
 while(mf->parent!=NULL){
 end_scope(mf);
@@ -3161,18 +3161,18 @@ mf= mf->parent;
 Wtrash_arena(metafont_arena);
 }
 /*:875*/
-#line 18912 "./cweb/weaver.w"
+#line 18930 "./cweb/weaver.w"
 
 }
 /*:849*/
-#line 18133 "./cweb/weaver.w"
+#line 18151 "./cweb/weaver.w"
 
 /*823:*/
-#line 18152 "./cweb/weaver.w"
+#line 18170 "./cweb/weaver.w"
 
 
 /*:823*//*827:*/
-#line 18194 "./cweb/weaver.w"
+#line 18212 "./cweb/weaver.w"
 
 void _initialize_metafont(void){
 struct metafont*mf;
@@ -3183,7 +3183,7 @@ fprintf(stderr,"ERROR: This system have no enough memory to "
 exit(1);
 }
 /*900:*/
-#line 19971 "./cweb/weaver.w"
+#line 19989 "./cweb/weaver.w"
 
 primitive_sparks= _new_trie(_user_arena);
 _insert_trie(primitive_sparks,_user_arena,INT,"end",0);
@@ -3213,7 +3213,7 @@ _insert_trie(primitive_sparks,_user_arena,INT,"transform",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"pair",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"numeric",0);
 /*904:*/
-#line 20221 "./cweb/weaver.w"
+#line 20239 "./cweb/weaver.w"
 
 _insert_trie(primitive_sparks,_user_arena,INT,"expr",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"suffix",0);
@@ -3226,17 +3226,17 @@ _insert_trie(primitive_sparks,_user_arena,INT,":=",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"(",0);
 _insert_trie(primitive_sparks,_user_arena,INT,")",0);
 /*:904*//*915:*/
-#line 20572 "./cweb/weaver.w"
+#line 20590 "./cweb/weaver.w"
 
 _insert_trie(primitive_sparks,_user_arena,INT,"@#",0);
 /*:915*//*920:*/
-#line 20712 "./cweb/weaver.w"
+#line 20730 "./cweb/weaver.w"
 
 _insert_trie(primitive_sparks,_user_arena,INT,"primarydef",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"secondarydef",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"tertiarydef",0);
 /*:920*//*923:*/
-#line 20873 "./cweb/weaver.w"
+#line 20891 "./cweb/weaver.w"
 
 _insert_trie(primitive_sparks,_user_arena,INT,"&",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"jobname",0);
@@ -3246,17 +3246,17 @@ _insert_trie(primitive_sparks,_user_arena,INT,"char",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"decimal",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"substring",0);
 /*:923*//*964:*/
-#line 22163 "./cweb/weaver.w"
+#line 22181 "./cweb/weaver.w"
 
 _insert_trie(primitive_sparks,_user_arena,INT,"&",0);
 /*:964*//*967:*/
-#line 22232 "./cweb/weaver.w"
+#line 22250 "./cweb/weaver.w"
 
 _insert_trie(primitive_sparks,_user_arena,INT,"message",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"errmessage",0);
 _insert_trie(primitive_sparks,_user_arena,INT,"errhelp",0);
 /*:967*/
-#line 19999 "./cweb/weaver.w"
+#line 20017 "./cweb/weaver.w"
 
 #ifdef W_DEBUG_METAFONT
 printf("METAFONT Sparks:");
@@ -3264,18 +3264,18 @@ _debug_trie_values("",primitive_sparks);
 printf("\n");
 #endif
 /*:900*/
-#line 18203 "./cweb/weaver.w"
+#line 18221 "./cweb/weaver.w"
 
 /*833:*/
-#line 18318 "./cweb/weaver.w"
+#line 18336 "./cweb/weaver.w"
 
 mf= _new_metafont(NULL,"fonts/init.mf");
 /*:833*/
-#line 18204 "./cweb/weaver.w"
+#line 18222 "./cweb/weaver.w"
 
 }
 /*:827*//*832:*/
-#line 18263 "./cweb/weaver.w"
+#line 18281 "./cweb/weaver.w"
 
 struct metafont*_new_metafont(struct metafont*parent,char*filename){
 void*arena;
@@ -3311,18 +3311,18 @@ structure->buffer_position= 0;
 structure->line= 1;
 structure->error= false;
 /*846:*/
-#line 18802 "./cweb/weaver.w"
+#line 18820 "./cweb/weaver.w"
 
 structure->pending_tokens= NULL;
 structure->past_tokens= NULL;
 /*:846*//*855:*/
-#line 19025 "./cweb/weaver.w"
+#line 19043 "./cweb/weaver.w"
 
 structure->internal_quantities= _new_trie(arena);
 if(structure->internal_quantities==NULL)
 goto error_no_memory;
 /*:855*//*856:*/
-#line 19039 "./cweb/weaver.w"
+#line 19057 "./cweb/weaver.w"
 
 if(structure->parent==NULL){
 struct _trie*T= structure->internal_quantities;
@@ -3378,19 +3378,19 @@ _insert_trie(T,arena,DOUBLE,"yoffset",0.0);
 _insert_trie(T,arena,DOUBLE,"boundarychar",-1.0);
 }
 /*:856*//*861:*/
-#line 19236 "./cweb/weaver.w"
+#line 19254 "./cweb/weaver.w"
 
 structure->everyjob_token_name= NULL;
 /*:861*//*870:*/
-#line 19406 "./cweb/weaver.w"
+#line 19424 "./cweb/weaver.w"
 
 structure->hint= 0;
 /*:870*//*880:*/
-#line 19544 "./cweb/weaver.w"
+#line 19562 "./cweb/weaver.w"
 
 structure->variable_types= _new_trie(arena);
 /*:880*//*882:*/
-#line 19561 "./cweb/weaver.w"
+#line 19579 "./cweb/weaver.w"
 
 {
 int i;
@@ -3399,15 +3399,15 @@ for(i= 0;i<8;i++)
 structure->vars[i]= _new_trie(arena);
 }
 /*:882*//*888:*/
-#line 19697 "./cweb/weaver.w"
+#line 19715 "./cweb/weaver.w"
 
 structure->delimiters= _new_trie(arena);
 /*:888*//*893:*/
-#line 19785 "./cweb/weaver.w"
+#line 19803 "./cweb/weaver.w"
 
 structure->outer_tokens= _new_trie(arena);
 /*:893*//*897:*/
-#line 19911 "./cweb/weaver.w"
+#line 19929 "./cweb/weaver.w"
 
 structure->def= _new_trie(arena);
 structure->vardef= _new_trie(arena);
@@ -3415,20 +3415,20 @@ structure->primarydef= _new_trie(arena);
 structure->secondarydef= _new_trie(arena);
 structure->tertiarydef= _new_trie(arena);
 /*:897*//*908:*/
-#line 20275 "./cweb/weaver.w"
+#line 20293 "./cweb/weaver.w"
 
 structure->macros= _new_trie(arena);
 /*:908*/
-#line 18297 "./cweb/weaver.w"
+#line 18315 "./cweb/weaver.w"
 
 /*852:*/
-#line 18995 "./cweb/weaver.w"
+#line 19013 "./cweb/weaver.w"
 
 if(parent==NULL){
 run_statements(structure);
 }
 /*:852*/
-#line 18298 "./cweb/weaver.w"
+#line 18316 "./cweb/weaver.w"
 
 if(parent!=NULL)
 parent->child= structure;
@@ -3445,6 +3445,6 @@ fprintf(stderr,"ERROR: Not enough memory to parse METAFONT "
 return NULL;
 }
 /*:832*/
-#line 18134 "./cweb/weaver.w"
+#line 18152 "./cweb/weaver.w"
 
 /*:818*/

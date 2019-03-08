@@ -1,9 +1,9 @@
 /*358:*/
-#line 7895 "./cweb/weaver.w"
+#line 7910 "./cweb/weaver.w"
 
 #include "plugins.h"
 /*:358*//*361:*/
-#line 7965 "./cweb/weaver.w"
+#line 7980 "./cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 void _initialize_plugin(struct _plugin_data*data,char*path){
@@ -110,7 +110,7 @@ fprintf(stderr,"WARNING (3): New plugin loaded: %s.\n",data->plugin_name);
 }
 #endif
 /*:361*//*363:*/
-#line 8100 "./cweb/weaver.w"
+#line 8115 "./cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 void _finalize_plugin(struct _plugin_data*data){
@@ -135,7 +135,7 @@ fprintf(stderr,"WARNING (3): Plugin finalized: %s.\n",data->plugin_name);
 }
 #endif
 /*:363*//*365:*/
-#line 8141 "./cweb/weaver.w"
+#line 8156 "./cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 bool _reload_plugin(int plugin_id){
@@ -235,7 +235,7 @@ return true;
 }
 #endif
 /*:365*//*368:*/
-#line 8255 "./cweb/weaver.w"
+#line 8270 "./cweb/weaver.w"
 
 #if W_TARGET == W_WEB
 bool _reload_plugin(int plugin_id){
@@ -243,7 +243,7 @@ return(bool)(plugin_id+1);
 }
 #endif
 /*:368*//*376:*/
-#line 8462 "./cweb/weaver.w"
+#line 8477 "./cweb/weaver.w"
 
 int _Wget_plugin(char*plugin_name){
 int i;
@@ -253,7 +253,7 @@ return i;
 return-1;
 }
 /*:376*//*380:*/
-#line 8496 "./cweb/weaver.w"
+#line 8511 "./cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 void _reload_all_plugins(void){
@@ -336,7 +336,7 @@ pthread_mutex_unlock(&(_plugin_mutex));
 }
 #endif
 /*:380*//*384:*/
-#line 8608 "./cweb/weaver.w"
+#line 8623 "./cweb/weaver.w"
 
 #if W_TARGET == W_WEB
 void _reload_all_plugins(void){
@@ -344,7 +344,7 @@ return;
 }
 #endif
 /*:384*//*407:*/
-#line 9013 "./cweb/weaver.w"
+#line 9028 "./cweb/weaver.w"
 
 bool _Wenable_plugin(int plugin_id){
 #ifdef W_PREVENT_SELF_ENABLING_PLUGINS
@@ -399,7 +399,7 @@ return false;
 return _plugins[plugin_id].enabled;
 }
 /*:407*//*411:*/
-#line 9103 "./cweb/weaver.w"
+#line 9118 "./cweb/weaver.w"
 
 #if W_TARGET == W_ELF
 void*_Wget_plugin_data(int plugin_id){

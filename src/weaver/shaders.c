@@ -1,5 +1,5 @@
 /*466:*/
-#line 10185 "./cweb/weaver.w"
+#line 10203 "./cweb/weaver.w"
 
 #include <sys/types.h>  
 #include <sys/stat.h>  
@@ -10,7 +10,7 @@
 #include <fcntl.h>  
 #include "shaders.h"
 /*474:*/
-#line 10286 "./cweb/weaver.w"
+#line 10304 "./cweb/weaver.w"
 
 char _vertex_interface[]= {
 #include "vertex_interface.data"
@@ -19,7 +19,7 @@ char _fragment_interface[]= {
 #include "fragment_interface.data"
 ,0x00};
 /*:474*//*476:*/
-#line 10304 "./cweb/weaver.w"
+#line 10322 "./cweb/weaver.w"
 
 GLuint _compile_shader(char*source,bool vertex){
 GLuint shader;
@@ -56,7 +56,7 @@ exit(1);
 return shader;
 }
 /*:476*//*478:*/
-#line 10349 "./cweb/weaver.w"
+#line 10367 "./cweb/weaver.w"
 
 GLuint _link_and_clean_shaders(GLuint vertex,GLuint fragment){
 GLuint program= glCreateProgram();
@@ -91,7 +91,7 @@ glDetachShader(program,fragment);
 return program;
 }
 /*:478*//*488:*/
-#line 10705 "./cweb/weaver.w"
+#line 10723 "./cweb/weaver.w"
 
 void _compile_and_insert_new_shader(char*dir,int position){
 char*vertex_file= NULL,*fragment_file= NULL;
@@ -324,7 +324,7 @@ if(fragment_source!=NULL)Wfree(fragment_source);
 if(vertex_source!=NULL)Wfree(vertex_source);
 }
 /*:488*//*518:*/
-#line 11499 "./cweb/weaver.w"
+#line 11517 "./cweb/weaver.w"
 
 char _vertex_interface_texture[]= {
 #include "vertex_interface_texture.data"
@@ -333,7 +333,7 @@ char _fragment_interface_texture[]= {
 #include "fragment_interface_texture.data"
 ,0x00};
 /*:518*//*524:*/
-#line 11680 "./cweb/weaver.w"
+#line 11698 "./cweb/weaver.w"
 
 void _change_resolution(int resolution_x,int resolution_y){
 #if W_WIDTH != 0 || W_HEIGHT != 0
@@ -401,13 +401,13 @@ W.resize_interface(&_interfaces[i][j],new_width,new_height);
 #endif
 }
 /*:524*//*529:*/
-#line 11776 "./cweb/weaver.w"
+#line 11794 "./cweb/weaver.w"
 
 void _change_final_shader(int type){
 _final_shader[_number_of_loops]= type;
 }
 /*:529*//*685:*/
-#line 15320 "./cweb/weaver.w"
+#line 15338 "./cweb/weaver.w"
 
 char _vertex_image_interface[]= {
 #include "vertex_image_interface.data"
@@ -416,6 +416,6 @@ char _fragment_image_interface[]= {
 #include "fragment_image_interface.data"
 ,0x00};
 /*:685*/
-#line 10194 "./cweb/weaver.w"
+#line 10212 "./cweb/weaver.w"
 
 /*:466*/

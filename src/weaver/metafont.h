@@ -1,5 +1,5 @@
 /*817:*/
-#line 18107 "./cweb/weaver.w"
+#line 18125 "./cweb/weaver.w"
 
 #ifndef _metafont_h_
 #define _metafont_h_
@@ -14,25 +14,25 @@ extern"C"{
 #include "../../conf/conf.h"
 #include "conf_end.h"
 /*:66*/
-#line 18114 "./cweb/weaver.w"
+#line 18132 "./cweb/weaver.w"
 
 #if W_DEBUG_LEVEL == 0 && defined(W_DEBUG_METAFONT)
 #error "Use W_DEBUG_METAFONT only with W_DABUG_LEVEL > 0"
 #endif
 /*820:*/
-#line 18140 "./cweb/weaver.w"
+#line 18158 "./cweb/weaver.w"
 
 
 /*:820*//*826:*/
-#line 18187 "./cweb/weaver.w"
+#line 18205 "./cweb/weaver.w"
 
 void _initialize_metafont(void);
 /*:826*//*831:*/
-#line 18259 "./cweb/weaver.w"
+#line 18277 "./cweb/weaver.w"
 
 struct metafont*_new_metafont(struct metafont*,char*);
 /*:831*/
-#line 18118 "./cweb/weaver.w"
+#line 18136 "./cweb/weaver.w"
 
 #ifdef __cplusplus
 }
